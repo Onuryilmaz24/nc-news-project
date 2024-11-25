@@ -1,9 +1,11 @@
-# Northcoders News API
+Add .env.development and .env.test files to main directory.
 
-For instructions, please head over to [L2C NC News](https://l2c.northcoders.com/courses/be/nc-news).
+.env.development will be your development database so inside to file you need to write
+PGDATABASE = nc_news
 
+.env.test file will be your test database, so inside to file you need yo write
+PGDATABASE = nc_news_test
 
+After that head over to the connection.js file in db directory. You'll see your database will be implementing the system for both cases.
 
---- 
-
-This portfolio project was created as part of a Digital Skills Bootcamp in Software Engineering provided by [Northcoders](https://northcoders.com/)
+Then run "setup-dbs" in your console. Your databases will be created.

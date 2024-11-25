@@ -1,6 +1,18 @@
 const endpointsJson = require("../endpoints.json");
-/* Set up your test imports here */
+const request = require("supertest")
+const db = require("../db/connection")
+const app = require("../app")
+const seed = require("../db/seeds/seed")
+const data = require("../db/data/test-data/index")
 
+afterAll(()=>{
+  console.log("All tests have been finished")
+  return db.end();
+})
+
+beforeEach(()=>{
+  return seed(data);
+})
 /* Set up your beforeEach & afterAll functions here */
 
 describe("GET /api", () => {
