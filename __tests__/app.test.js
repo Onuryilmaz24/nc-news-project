@@ -58,3 +58,22 @@ describe("GET /api/topics", () => {
     })
   });
 });
+
+describe('GET /api/articles', () => {
+  describe('GET /api/articles/:article_id', () => {
+   test.only('200: Should response with correct article ', () => {
+    return request(app)
+    .get("/api/articles/1")
+    .expect(200)
+    .then(({body : {article}})=>{
+      const expectedResponse = endpointsJson["GET /api/articles"].exampleResponse.articles[0]
+      expect(Object.keys(article)).toEqual(Object.keys(expectedResponse))
+
+      const keys = Object.keys(article)
+      keys.forEach((key)=>{
+        expect(typeof article[key]).toBe(typeof article[key])
+      })
+    })
+   });
+  });
+});
