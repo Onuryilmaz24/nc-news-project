@@ -7,7 +7,8 @@
     "setup-dbs": "psql -f ./db/setup.sql",
     "seed": "node ./db/seeds/run-seed.js",
     "test": "jest",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "scratch": "psql -f Scratch.sql > Scratch.txt"
   },
   "repository": {
     "type": "git",
@@ -21,14 +22,18 @@
   },
   "homepage": "https://github.com/northcoders/be-nc-news#readme",
   "devDependencies": {
+    "dotenv": "^16.4.5",
     "husky": "^8.0.2",
     "jest": "^27.5.1",
     "jest-extended": "^2.0.0",
-    "pg-format": "^1.0.4"
+    "jest-sorted": "^1.0.15",
+    "nodemon": "^3.1.7",
+    "pg-format": "^1.0.4",
+    "supertest": "^7.0.0"
   },
   "dependencies": {
-    "dotenv": "^16.0.0",
-    "pg": "^8.7.3"
+    "express": "^4.21.1",
+    "pg": "^8.13.1"
   },
   "jest": {
     "setupFilesAfterEnv": [
