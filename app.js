@@ -10,6 +10,7 @@ const {
 const {
   getArticleCommentsById,
   postCommentByArticleId,
+  deleteCommentByCommentId,
 } = require("./Controller/comments.controller");
 
 const app = express();
@@ -29,6 +30,8 @@ app.get("/api/articles/:article_id/comments", getArticleCommentsById);
 app.post("/api/articles/:article_id/comments", postCommentByArticleId);
 
 app.patch("/api/articles/:article_id", patchArticleVoteById);
+
+app.delete("/api/comments/:comment_id", deleteCommentByCommentId);
 
 app.all("*", (req, res) => {
   res.status(404).send({ msg: "Route Does Not Found" });

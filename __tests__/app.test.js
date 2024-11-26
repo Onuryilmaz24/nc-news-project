@@ -272,9 +272,9 @@ describe("POST /api/articles/:article_id/comments", () => {
 });
 
 describe("PATCH /api/articles/:article_id", () => {
-  test("201: Should update articles votes and return updated article", () => {
+  test("200: Should update articles votes and return updated article", () => {
     const updateBody = {
-      inc_vote: 1,
+      inc_vote: -1,
     };
     return request(app)
       .patch("/api/articles/1")
@@ -359,4 +359,36 @@ describe("PATCH /api/articles/:article_id", () => {
 
       });
   });
+});
+
+describe('DELETE /api/comments/:comment_id', () => {
+    test('204: Should delete comment', () => {
+      return request(app)
+      .delete("/api/comments/1")
+      .expect(204)
+      .then(({body})=>{
+        console.log(body)
+        expect(body).toEqual({})
+      return request(app)
+      .get("/api/comments/1")
+      .expect(404)
+      })
+    });
+    test('404: Should returns with message if comment does not exist', () => {
+      return request(app)
+      .delete("/api/comments/99")
+      .expect(404)
+      .then(({body : {msg}})=>{
+        expect(msg).toBe("Does Not Found")
+      })
+    });
+    test('400: Should returns with message if comment does not exist', () => {
+      return request(app)
+      .delete("/api/comments/one")
+      .expect(400)
+      .then(({body : {msg}})=>{
+        expect(msg).toBe("Bad Request")
+      })
+    });
+
 });
