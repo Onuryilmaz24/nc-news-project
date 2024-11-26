@@ -80,21 +80,21 @@ describe("GET /api/articles/:article_id", () => {
       });
   });
 
-  test('404: Article_id Does not exist', () => {
-      return request(app)
+  test("404: Article_id Does not exist", () => {
+    return request(app)
       .get("/api/articles/999")
       .expect(404)
-      .then(({body : {msg}})=>{
-        expect(msg).toBe("Not Found")
-      })
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Not Found");
+      });
   });
-  test('400: article_id is not a number', () => {
-      return request(app)
+  test("400: article_id is not a number", () => {
+    return request(app)
       .get("/api/articles/one")
       .expect(400)
-      .then(({body:{msg}})=>{
-        expect(msg).toBe("Bad Request")
-      })
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad Request");
+      });
   });
 });
 
@@ -132,51 +132,116 @@ describe("GET /api/articles - Default Sort and Order", () => {
   });
 });
 
-describe('GET /api/articles/:article_id/comments', () => {
-  test('200: Should returns with all comments for Selected Author Id with most recent comments first', () => {
-      return request(app)
+describe.only("GET /api/articles/:article_id/comments", () => {
+  test("200: Should returns with all comments for Selected Author Id with most recent comments first", () => {
+    return request(app)
       .get("/api/articles/1/comments")
       .expect(200)
-      .then(({body : {comments}})=>{
-        expect(comments).toHaveLength(11)
-        expect(comments).toBeSortedBy("created_at",{descending:true})
-        comments.forEach((comment)=>{
+      .then(({ body: { comments } }) => {
+        expect(comments).toHaveLength(11);
+        expect(comments).toBeSortedBy("created_at", { descending: true });
+        comments.forEach((comment) => {
           expect(comment).toEqual(
             expect.objectContaining({
-              comment_id : expect.any(Number),
+              comment_id: expect.any(Number),
               body: expect.any(String),
               article_id: expect.any(Number),
               author: expect.any(String),
               votes: expect.any(Number),
-              created_at: expect.any(String)
+              created_at: expect.any(String),
             })
-          )
-        })
-      })
+          );
+        });
+      });
   });
 
-  test('404: Should returns message if the article does not have comments', () => {
-      return request(app)
+  test("200: Should returns empty array if article exist but does not have any comments", () => {
+    return request(app)
       .get("/api/articles/2/comments")
-      .expect(404)
-      .then(({body : {msg}})=>{
-        expect(msg).toBe("Article Does Not Have Comment Yet")
-      })
+      .expect(200)
+      .then(({ body: { comments } }) => {
+        expect(comments).toEqual([]);
+      });
   });
-  test('400: Should returns message if the article_id has invalid format', () => {
-      return request(app)
+  test("400: Should returns message if the article_id has invalid format", () => {
+    return request(app)
       .get("/api/articles/one/comments")
       .expect(400)
-      .then(({body : {msg}})=>{
-        expect(msg).toBe("Bad Request")
-      })
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad Request");
+      });
   });
-  test.only('404: Should returns message if route is not correct ', () => {
+  test("404: Should returns message if route is not correct ", () => {
     return request(app)
-    .get("/api/articles/1/commenstasda")
-    .expect(404)
-    .then(({body : {msg}})=>{
-      expect(msg).toBe("Route Does Not Found")
-    })
+      .get("/api/articles/1/commenstasda")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Route Does Not Found");
+      });
+  });
+});
+
+describe("POST /api/articles/:article_id/comments", () => {
+  test("201: Should post a body and return inserted Value", () => {
+    const postBody = {
+      username: "butter_bridge",
+      body: "This is a comment about article",
+    };
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(postBody)
+      .expect(201)
+      .then(({ body: { comment } }) => {
+        expect(comment).toEqual(
+          expect.objectContaining({
+            comment_id: expect.any(Number),
+            body: expect.any(String),
+            article_id: expect.any(Number),
+            author: expect.any(String),
+            votes: expect.any(Number),
+            created_at: expect.any(String),
+          })
+        );
+      });
+  });
+  test('400: Should response with Bad Request when Post Body contains not allowed items', () => {
+    const postBody = {
+      username: "butter_bridge",
+      body: "This is a comment about article",
+      votes: 100
+    };
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(postBody)
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad Request")
+      });
+  });
+  test('404: Should response with Bad Request when Article does not exist ', () => {
+    const postBody = {
+      username: "butter_bridge",
+      body: "This is a comment about article"
+    };
+    return request(app)
+      .post("/api/articles/999/comments")
+      .send(postBody)
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Does Not Found")
+      });
+  });
+  test('400: Should response with Bad Request when article_id has invalid format', () => {
+    const postBody = {
+      username: "butter_bridge",
+      body: "This is a comment about article"
+    };
+    return request(app)
+      .post("/api/articles/one/comments")
+      .send(postBody)
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad Request")
+      });
   });
 });
