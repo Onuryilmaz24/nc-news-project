@@ -45,7 +45,6 @@ exports.selectAllArticles = (
   const validOrder = ["DESC", "ASC"];
 
   if (!validOrder.includes(order) || !validSortBy.includes(sort_by)) {
-    console.log("Error here");
     return Promise.reject({ status: 400, msg: "Bad Request" });
   }
 
@@ -67,9 +66,9 @@ exports.selectAllArticles = (
 
   return db.query(sqlText).then(({ rows }) => {
     if (rows.length === 0) {
-      console.log("Nope Error Here");
       return Promise.reject({ status: 400, msg: "Bad Request" });
     }
     return rows;
   });
 };
+
