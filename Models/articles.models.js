@@ -71,3 +71,24 @@ exports.selectAllArticles = (
     return rows;
   });
 };
+
+exports.updateArticleVoteById = (article_id, updateBody) => {
+  const validUpdate = ["inc_vote"];
+  if (
+    !Object.keys(updateBody).every((key) => {
+      return validUpdate.includes(key);
+    })
+  ) {
+    return Promise.reject({ status: 400, msg: "Bad Request" });
+  }
+
+  const { inc_vote } = updateBody;
+  let sqlText = `UPDATE articles
+  SET votes = votes + $1
+  WHERE article_id = $2
+  RETURNING*;`;
+
+  return db.query(sqlText, [inc_vote, article_id]).then(({ rows }) => {
+    return rows[0];
+  });
+};

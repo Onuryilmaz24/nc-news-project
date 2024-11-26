@@ -132,7 +132,7 @@ describe("GET /api/articles - Default Sort and Order", () => {
   });
 });
 
-describe.only("GET /api/articles/:article_id/comments", () => {
+describe("GET /api/articles/:article_id/comments", () => {
   test("200: Should returns with all comments for Selected Author Id with most recent comments first", () => {
     return request(app)
       .get("/api/articles/1/comments")
@@ -204,44 +204,191 @@ describe("POST /api/articles/:article_id/comments", () => {
         );
       });
   });
-  test('400: Should response with Bad Request when Post Body contains not allowed items', () => {
+  test("400: Should response with Bad Request when Post Body contains not allowed items", () => {
     const postBody = {
       username: "butter_bridge",
       body: "This is a comment about article",
-      votes: 100
+      votes: 100,
     };
     return request(app)
       .post("/api/articles/1/comments")
       .send(postBody)
       .expect(400)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("Bad Request")
+        expect(msg).toBe("Bad Request");
       });
   });
-  test('404: Should response with Bad Request when Article does not exist ', () => {
+  test("400: Should response with Bad Request when Post Body is empty", () => {
+    const postBody = {
+    };
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(postBody)
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad Request");
+      });
+  });
+  test("400: Should response with Bad Request when username does not exists", () => {
+    const postBody = {
+      username: "user_name",
+      body: "This is a comment about article",
+      votes: 100,
+    };
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(postBody)
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad Request");
+      });
+  });
+  test("404: Should response with Bad Request when Article does not exist ", () => {
     const postBody = {
       username: "butter_bridge",
-      body: "This is a comment about article"
+      body: "This is a comment about article",
     };
     return request(app)
       .post("/api/articles/999/comments")
       .send(postBody)
       .expect(404)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("Does Not Found")
+        expect(msg).toBe("Does Not Found");
       });
   });
-  test('400: Should response with Bad Request when article_id has invalid format', () => {
+  test("400: Should response with Bad Request when article_id has invalid format", () => {
     const postBody = {
       username: "butter_bridge",
-      body: "This is a comment about article"
+      body: "This is a comment about article",
     };
     return request(app)
       .post("/api/articles/one/comments")
       .send(postBody)
       .expect(400)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("Bad Request")
+        expect(msg).toBe("Bad Request");
       });
   });
+});
+
+describe("PATCH /api/articles/:article_id", () => {
+  test("200: Should update articles votes and return updated article", () => {
+    const updateBody = {
+      inc_vote: -1,
+    };
+    return request(app)
+      .patch("/api/articles/1")
+      .send(updateBody)
+      .expect(200)
+      .then(({ body: { updatedArticle } }) => {
+        expect(updatedArticle).toMatchObject({
+          article_id: expect.any(Number),
+          title: expect.any(String),
+          topic: expect.any(String),
+          author: expect.any(String),
+          body: expect.any(String),
+          created_at: expect.any(String),
+          votes: expect.any(Number),
+          article_img_url: expect.any(String)
+
+        })
+      });
+  });
+  test('400: Should response with Bad Request when Update Body contains not allowed items ', () => {
+    const updateBody = {
+      inc_vote: 1,
+      title: "New_Title"
+    };
+    return request(app)
+      .patch("/api/articles/1")
+      .send(updateBody)
+      .expect(400)
+      .then(({ body: { msg } }) => {
+         expect(msg).toBe("Bad Request")
+
+      });
+  });
+  test('400: Should response with Bad Request when Update Body is empty', () => {
+    const updateBody = {
+    };
+    return request(app)
+      .patch("/api/articles/1")
+      .send(updateBody)
+      .expect(400)
+      .then(({ body: { msg } }) => {
+         expect(msg).toBe("Bad Request")
+
+      });
+  });
+  test('404: Should response with Does Not Found when article does not exist ', () => {
+    const updateBody = {
+      inc_vote: 1,
+    };
+    return request(app)
+      .patch("/api/articles/999")
+      .send(updateBody)
+      .expect(404)
+      .then(({ body: { msg } }) => {
+         expect(msg).toBe("Does Not Found")
+
+      });
+  });
+  test('400: Should response with Bad Request when article_id has invalid format ', () => {
+    const updateBody = {
+      inc_vote: 1,
+    };
+    return request(app)
+      .patch("/api/articles/one")
+      .send(updateBody)
+      .expect(400)
+      .then(({ body: { msg } }) => {
+         expect(msg).toBe("Bad Request")
+
+      });
+  });
+  test('400: Should response with Bad Request when inc_vote has invalid format ', () => {
+    const updateBody = {
+      inc_vote: "1",
+    };
+    return request(app)
+      .patch("/api/articles/one")
+      .send(updateBody)
+      .expect(400)
+      .then(({ body: { msg } }) => {
+         expect(msg).toBe("Bad Request")
+
+      });
+  });
+});
+
+describe('DELETE /api/comments/:comment_id', () => {
+    test('204: Should delete comment', () => {
+      return request(app)
+      .delete("/api/comments/1")
+      .expect(204)
+      .then(({body})=>{
+        console.log(body)
+        expect(body).toEqual({})
+      return request(app)
+      .get("/api/comments/1")
+      .expect(404)
+      })
+    });
+    test('404: Should returns with message if comment does not exist', () => {
+      return request(app)
+      .delete("/api/comments/99")
+      .expect(404)
+      .then(({body : {msg}})=>{
+        expect(msg).toBe("Does Not Found")
+      })
+    });
+    test('400: Should returns with message if comment does not exist', () => {
+      return request(app)
+      .delete("/api/comments/one")
+      .expect(400)
+      .then(({body : {msg}})=>{
+        expect(msg).toBe("Bad Request")
+      })
+    });
+
 });

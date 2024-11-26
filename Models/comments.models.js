@@ -41,3 +41,12 @@ exports.addCommentByArticleId = (article_id, postBody) => {
     return rows[0];
   });
 };
+
+exports.removeCommentById = (comment_id) => {
+  let sqlText = "DELETE FROM comments WHERE comment_id = $1 RETURNING *";
+  let values = [comment_id];
+
+  return db.query(sqlText, values).then(({ rows }) => {
+    return rows[0];
+  });
+};
