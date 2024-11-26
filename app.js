@@ -5,6 +5,7 @@ const { customErrorHandler, postgresErrorHandler } = require("./errorHandler");
 const {
   getArticleById,
   getAllArticles,
+  patchArticleVoteById,
 } = require("./Controller/articles.controller");
 const {
   getArticleCommentsById,
@@ -26,6 +27,8 @@ app.get("/api/articles", getAllArticles);
 app.get("/api/articles/:article_id/comments", getArticleCommentsById);
 
 app.post("/api/articles/:article_id/comments", postCommentByArticleId);
+
+app.patch("/api/articles/:article_id", patchArticleVoteById);
 
 app.all("*", (req, res) => {
   res.status(404).send({ msg: "Route Does Not Found" });

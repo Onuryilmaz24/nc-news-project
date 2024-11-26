@@ -18,7 +18,6 @@ exports.getArticleCommentsById = (req, res, next) => {
       res.status(200).send({ comments });
     })
     .catch((err) => {
-        console.log(err)
       next(err);
     });
 };
@@ -26,13 +25,11 @@ exports.getArticleCommentsById = (req, res, next) => {
 exports.postCommentByArticleId = (req, res, next) => {
   const postBody = req.body;
   const { article_id } = req.params;
-
   addCommentByArticleId(article_id, postBody)
     .then((comment) => {
       res.status(201).send({ comment });
     })
     .catch((err) => {
-      console.log(err);
       next(err);
     });
 };
