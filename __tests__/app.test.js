@@ -131,3 +131,52 @@ describe("GET /api/articles - Default Sort and Order", () => {
       });
   });
 });
+
+describe('GET /api/articles/:article_id/comments', () => {
+  test('200: Should returns with all comments for Selected Author Id with most recent comments first', () => {
+      return request(app)
+      .get("/api/articles/1/comments")
+      .expect(200)
+      .then(({body : {comments}})=>{
+        expect(comments).toHaveLength(11)
+        expect(comments).toBeSortedBy("created_at",{descending:true})
+        comments.forEach((comment)=>{
+          expect(comment).toEqual(
+            expect.objectContaining({
+              comment_id : expect.any(Number),
+              body: expect.any(String),
+              article_id: expect.any(Number),
+              author: expect.any(String),
+              votes: expect.any(Number),
+              created_at: expect.any(String)
+            })
+          )
+        })
+      })
+  });
+
+  test('404: Should returns message if the article does not have comments', () => {
+      return request(app)
+      .get("/api/articles/2/comments")
+      .expect(404)
+      .then(({body : {msg}})=>{
+        expect(msg).toBe("Article Does Not Have Comment Yet")
+      })
+  });
+  test('400: Should returns message if the article_id has invalid format', () => {
+      return request(app)
+      .get("/api/articles/one/comments")
+      .expect(400)
+      .then(({body : {msg}})=>{
+        expect(msg).toBe("Bad Request")
+      })
+  });
+  test.only('404: Should returns message if route is not correct ', () => {
+    return request(app)
+    .get("/api/articles/1/commenstasda")
+    .expect(404)
+    .then(({body : {msg}})=>{
+      expect(msg).toBe("Route Does Not Found")
+    })
+  });
+});
