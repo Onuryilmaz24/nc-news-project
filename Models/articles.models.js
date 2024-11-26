@@ -71,4 +71,3 @@ exports.selectAllArticles = (
     return rows;
   });
 };
-
