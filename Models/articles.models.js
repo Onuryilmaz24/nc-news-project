@@ -1,21 +1,24 @@
 const db = require("../db/connection");
 
 exports.selectArticleById = (article_id) => {
-  let sqlText = `SELECT article_id,
-  title,
-  topic,
-  author,
-  body,
-  created_at,
-  votes,
-  article_img_url
-  FROM articles `;
+  let sqlText = `SELECT articles.article_id,
+  articles.title,
+  articles.topic,
+  articles.author,
+  articles.body,
+  articles.created_at,
+  articles.votes,
+  articles.article_img_url,
+  CAST(COUNT(comment_id) AS INTEGER) AS comment_count
+  FROM articles 
+  LEFT JOIN comments ON comments.article_id = articles.article_id`;
   let values = [];
 
   if (article_id) {
-    sqlText += `WHERE articles.article_id = $1`;
+    sqlText += ` WHERE articles.article_id = $1`;
     values.push(article_id);
   }
+  sqlText += ` GROUP BY articles.author,articles.title,articles.article_id,articles.topic,articles.created_at,articles.votes,articles.article_img_url`;
 
   return db.query(sqlText, values).then(({ rows }) => {
     if (rows.length === 0) {
@@ -47,7 +50,7 @@ exports.selectAllArticles = (
                     articles.created_at,
                     articles.votes,
                     articles.article_img_url,
-                    COUNT(comment_id) AS comment_count
+                    CAST(COUNT(comment_id) AS INTEGER) AS comment_count
                     FROM articles
                     LEFT JOIN comments ON comments.article_id = articles.article_id
                     `;
