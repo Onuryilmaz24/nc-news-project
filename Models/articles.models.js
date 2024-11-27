@@ -36,7 +36,6 @@ exports.selectAllArticles = (
   const validSortBy = [
     "author",
     "title",
-    "topic",
     "author",
     "votes",
     "created_at",
