@@ -33,14 +33,7 @@ exports.selectAllArticles = (
   votes,
   comment_count
 ) => {
-  const validSortBy = [
-    "author",
-    "title",
-    "author",
-    "votes",
-    "created_at",
-    "comment_count",
-  ];
+  const validSortBy = ["author","title","author","votes","created_at","comment_count"];
   const validOrder = ["DESC", "ASC"];
 
   if (!validOrder.includes(order) || !validSortBy.includes(sort_by)) {
@@ -56,17 +49,27 @@ exports.selectAllArticles = (
                     articles.article_img_url,
                     COUNT(comment_id) AS comment_count
                     FROM articles
-                    JOIN comments ON comments.article_id = articles.article_id
+                    LEFT JOIN comments ON comments.article_id = articles.article_id
                     `;
+
+  const values = [];
+  const sqlTextValues = [];
+
+
+  if(topic){
+    sqlTextValues.push(`articles.topic = $${values.length +1}`)
+    values.push(topic)
+  }
+
+  if(values.length>0){
+    sqlText+= ` WHERE ${sqlTextValues.join(" AND ")}`
+  }
 
   sqlText += ` GROUP BY articles.author,articles.title,articles.article_id,articles.topic,articles.created_at,articles.votes,articles.article_img_url`;
 
   sqlText += ` ORDER BY ${sort_by} ${order}`;
 
-  return db.query(sqlText).then(({ rows }) => {
-    if (rows.length === 0) {
-      return Promise.reject({ status: 400, msg: "Bad Request" });
-    }
+  return db.query(sqlText,values).then(({ rows }) => {
     return rows;
   });
 };
