@@ -1,6 +1,6 @@
 const express = require("express");
 const { coreController } = require("./Controller/coreController");
-const { getAllTopics } = require("./Controller/topics.controller");
+/* const { getAllTopics } = require("./Controller/topics.controller"); */
 const { customErrorHandler, postgresErrorHandler } = require("./errorHandler");
 const {
   getArticleById,
@@ -15,26 +15,29 @@ const {
 const { getAllUsers } = require("./Controller/users.controller");
 
 const app = express();
+const apiRouter = require("./Routers/api-router")
 
 app.use(express.json());
 
-app.get("/api", coreController);
 
-app.get("/api/topics", getAllTopics);
+/* app.get("/api", coreController); */
+app.use("/api",apiRouter)
 
-app.get("/api/articles/:article_id", getArticleById);
+/* app.get("/api/topics", getAllTopics); */
 
-app.get("/api/articles", getAllArticles);
+/* app.get("/api/articles/:article_id", getArticleById); */
 
-app.get("/api/articles/:article_id/comments", getArticleCommentsById);
+/* app.get("/api/articles", getAllArticles); */
 
-app.post("/api/articles/:article_id/comments", postCommentByArticleId);
+/* app.get("/api/articles/:article_id/comments", getArticleCommentsById); */
 
-app.patch("/api/articles/:article_id", patchArticleVoteById);
+/* app.post("/api/articles/:article_id/comments", postCommentByArticleId); */
 
-app.delete("/api/comments/:comment_id", deleteCommentByCommentId);
+/* app.patch("/api/articles/:article_id", patchArticleVoteById); */
 
-app.get("/api/users", getAllUsers);
+/* app.delete("/api/comments/:comment_id", deleteCommentByCommentId); */
+
+/* app.get("/api/users", getAllUsers); */
 
 app.all("*", (req, res) => {
   res.status(404).send({ msg: "Route Does Not Found" });
