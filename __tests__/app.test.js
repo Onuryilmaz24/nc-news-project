@@ -577,3 +577,26 @@ describe("GET /api/articles?topic=", () => {
       });
   });
 });
+
+describe('GET /api/users/:username', () => {
+  test('200: Returns with selected user', () => {
+      return request(app)
+      .get("/api/users/butter_bridge")
+      .expect(200)
+      .then(({body : {user}})=>{
+        expect(user).toMatchObject({
+          username: expect.any(String),
+          name: expect.any(String),
+          avatar_url: expect.any(String)
+        })
+      })
+  });
+  test('404: Returns with msg when username does not exist ', () => {
+    return request(app)
+    .get("/api/users/butter")
+    .expect(404)
+    .then(({body : {msg}})=>{
+      expect(msg).toBe("Does Not Found")
+    })
+});
+}); 
