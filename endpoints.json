@@ -12,7 +12,14 @@
   "GET /api/articles": {
     "description": "serves an array of all article with default order DESC and sort_by date accepts topic query",
     "queries": ["sort_by", "order", "topic"],
-    "validSortBy": ["author","title","author","votes","created_at","comment_count"],
+    "validSortBy": [
+      "author",
+      "title",
+      "author",
+      "votes",
+      "created_at",
+      "comment_count"
+    ],
     "exampleResponse": {
       "articles": [
         {
@@ -135,6 +142,31 @@
       "created_at": "2018-05-30T15:59:13.341Z",
       "votes": 0
     }
+  },
+  "POST /api/articles": {
+    "description": "serves comments by article_id with most recent comments first",
+    "queries": [],
+    "exampleBody": {
+      "title": "Living in the shadow of a great man",
+      "topic": "mitch",
+      "author": "butter_bridge",
+      "body": "I find this existence challenging",
+      "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+    },
+    "exampleResponse": {
+      "article": [
+        {
+          "article_id": 1,
+          "title": "Living in the shadow of a great man",
+          "topic": "mitch",
+          "author": "butter_bridge",
+          "body": "I find this existence challenging",
+          "created_at": 1594329060000,
+          "votes": 0,
+          "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+          "comment_count": 1
+        }
+      ]
+    }
   }
-  
 }

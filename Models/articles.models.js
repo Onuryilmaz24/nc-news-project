@@ -97,3 +97,32 @@ exports.updateArticleVoteById = (article_id, updateBody) => {
     return rows[0];
   });
 };
+
+exports.addNewArticle = (articleBody) => {
+  const validColumns = ["title","topic","author","body","article_img_url"]
+
+  if(!Object.keys(articleBody).every((key)=>{return validColumns.includes(key)})){
+    return Promise.reject({ status: 400, msg: "Bad Request" });
+  }
+
+  const {title,topic,author,body,article_img_url} = articleBody;
+  const values = [title,topic,author,body]
+  if (article_img_url) {
+    sqlInsertQuery = `
+      INSERT INTO articles (title, topic, author, body, article_img_url)
+      VALUES ($1, $2, $3, $4, $5)
+      RETURNING *, 0 AS comment_count;
+    `;
+    values.push(article_img_url);
+  } else {
+    sqlInsertQuery = `
+      INSERT INTO articles (title, topic, author, body)
+      VALUES ($1, $2, $3, $4)
+      RETURNING *, 0 AS comment_count;
+    `;
+  }
+
+  return db.query(sqlInsertQuery,values).then(({rows})=>{
+    return rows[0]
+  })
+}
