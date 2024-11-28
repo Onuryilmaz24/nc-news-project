@@ -3,6 +3,7 @@ const {
   selectAllCommentsById,
   addCommentByArticleId,
   removeCommentById,
+  updateCommentVoteById,
 } = require("../Models/comments.models");
 
 exports.getArticleCommentsById = (req, res, next) => {
@@ -52,3 +53,19 @@ exports.deleteCommentByCommentId = (req, res, next) => {
       next(err);
     });
 };
+
+exports.patchCommentById = (req,res,next) => {
+  const commentId = req.params.comment_id;
+  const updateBody = req.body;
+
+  const promises = [updateCommentVoteById(commentId,updateBody)];
+
+  promises.push(checkExist("comments","comment_id",commentId))
+
+  Promise.all(promises).then(([comment])=>{
+    res.status(200).send({comment})
+  }).catch((err)=>{
+   next(err)
+  })
+
+}
