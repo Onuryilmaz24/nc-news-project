@@ -19,8 +19,8 @@ exports.getArticleById = (req, res, next) => {
 };
 
 exports.getAllArticles = (req, res, next) => {
-  const { author, topic, sort_by, order, votes, comment_count } = req.query;
-  const promises = [selectAllArticles(author, topic, sort_by, order, votes, comment_count)]
+  const { author, topic, sort_by, order, votes, comment_count ,limit, p } = req.query;
+  const promises = [selectAllArticles(author, topic, sort_by, order, votes, comment_count, limit, p)]
 
   if(topic){
     promises.push(checkExist("topics","slug",topic))
@@ -56,10 +56,14 @@ exports.patchArticleVoteById = (req, res, next) => {
 exports.postArticle = (req,res,next) => {
 
   const postBody = req.body;
-  addNewArticle(postBody).then((article)=>{
+
+  addNewArticle(postBody).then((id)=>{
+    return selectArticleById(id)
+  }).then((article)=>{
     res.status(201).send({article})
   }).catch((err)=>{
     next(err)
   })
+
 
 }

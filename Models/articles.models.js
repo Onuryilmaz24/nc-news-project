@@ -34,12 +34,14 @@ exports.selectAllArticles = (
   sort_by = "created_at",
   order = "DESC",
   votes,
-  comment_count
+  comment_count,
+  limit =10,
+  p=1
 ) => {
-  const validSortBy = ["author","title","author","votes","created_at","comment_count"];
+  const validSortBy = ["author","title","author","votes","created_at","comment_count","article_id"];
   const validOrder = ["DESC", "ASC"];
 
-  if (!validOrder.includes(order) || !validSortBy.includes(sort_by)) {
+  if (!validOrder.includes(order) || !validSortBy.includes(sort_by) || Number(limit) <= 0 ) {
     return Promise.reject({ status: 400, msg: "Bad Request" });
   }
 
@@ -71,6 +73,9 @@ exports.selectAllArticles = (
   sqlText += ` GROUP BY articles.author,articles.title,articles.article_id,articles.topic,articles.created_at,articles.votes,articles.article_img_url`;
 
   sqlText += ` ORDER BY ${sort_by} ${order}`;
+
+  const offset = (p -1) * limit;
+  sqlText += ` LIMIT ${limit} OFFSET ${offset}`
 
   return db.query(sqlText,values).then(({ rows }) => {
     return rows;
@@ -109,20 +114,18 @@ exports.addNewArticle = (articleBody) => {
   const values = [title,topic,author,body]
   if (article_img_url) {
     sqlInsertQuery = `
-      INSERT INTO articles (title, topic, author, body, article_img_url)
+      INSERT INTO articles(title, topic, author, body, article_img_url)
       VALUES ($1, $2, $3, $4, $5)
-      RETURNING *, 0 AS comment_count;
-    `;
+      RETURNING *`;
     values.push(article_img_url);
   } else {
     sqlInsertQuery = `
-      INSERT INTO articles (title, topic, author, body)
+      INSERT INTO articles(title, topic, author, body)
       VALUES ($1, $2, $3, $4)
-      RETURNING *, 0 AS comment_count;
-    `;
+      RETURNING *`;
   }
 
   return db.query(sqlInsertQuery,values).then(({rows})=>{
-    return rows[0]
+    return rows[0].article_id;
   })
 }

@@ -525,7 +525,7 @@ describe("GET /api/articles?topic=", () => {
       .get("/api/articles?topic=")
       .expect(200)
       .then(({ body: { articles } }) => {
-        expect(articles).toHaveLength(13);
+        expect(articles).toHaveLength(10);
         articles.forEach((article) => {
           expect(article).toMatchObject({
             article_id: expect.any(Number),
@@ -545,7 +545,7 @@ describe("GET /api/articles?topic=", () => {
       .get("/api/articles?topic=mitch")
       .expect(200)
       .then(({ body: { articles } }) => {
-        expect(articles).toHaveLength(12);
+        expect(articles).toHaveLength(10);
         articles.forEach((article) => {
           expect(article).toMatchObject({
             article_id: expect.any(Number),
@@ -713,21 +713,21 @@ describe("POST /api/article", () => {
     };
 
     return request(app)
-    .post("/api/articles")
-    .send(postBody)
-    .expect(201)
-    .then(({body : {article}})=>{
-      expect(article).toMatchObject({
-        article_id: expect.any(Number),
-        title: postBody.title,
-        author: postBody.author,
-        body: postBody.body,
-        created_at: expect.any(String),
-        votes: expect.any(Number),
-        article_img_url: postBody.article_img_url,
-        comment_count: expect.any(Number)
-      })
-    })
+      .post("/api/articles")
+      .send(postBody)
+      .expect(201)
+      .then(({ body: { article } }) => {
+        expect(article).toMatchObject({
+          article_id: expect.any(Number),
+          title: postBody.title,
+          author: postBody.author,
+          body: postBody.body,
+          created_at: expect.any(String),
+          votes: expect.any(Number),
+          article_img_url: postBody.article_img_url,
+          comment_count: expect.any(Number),
+        });
+      });
   });
   test("201: returns a posted body and default img_url when img_url is not provided", () => {
     const postBody = {
@@ -738,21 +738,22 @@ describe("POST /api/article", () => {
     };
 
     return request(app)
-    .post("/api/articles")
-    .send(postBody)
-    .expect(201)
-    .then(({body : {article}})=>{
-      expect(article).toMatchObject({
-        article_id: expect.any(Number),
-        title: postBody.title,
-        author: postBody.author,
-        body: postBody.body,
-        created_at: expect.any(String),
-        votes: expect.any(Number),
-        article_img_url: "https://images.pexels.com/photos/97050/pexels-photo-97050.jpeg?w=700&h=700",
-        comment_count: expect.any(Number)
-      })
-    })
+      .post("/api/articles")
+      .send(postBody)
+      .expect(201)
+      .then(({ body: { article } }) => {
+        expect(article).toMatchObject({
+          article_id: expect.any(Number),
+          title: postBody.title,
+          author: postBody.author,
+          body: postBody.body,
+          created_at: expect.any(String),
+          votes: expect.any(Number),
+          article_img_url:
+            "https://images.pexels.com/photos/97050/pexels-photo-97050.jpeg?w=700&h=700",
+          comment_count: expect.any(Number),
+        });
+      });
   });
   test("400: returns a msg when postbody has missing keys except than article_img_url", () => {
     const postBody = {
@@ -764,31 +765,31 @@ describe("POST /api/article", () => {
     };
 
     return request(app)
-    .post("/api/articles")
-    .send(postBody)
-    .expect(400)
-    .then(({body : {msg}})=>{
-      expect(msg).toBe("Bad Request")
-    })
+      .post("/api/articles")
+      .send(postBody)
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad Request");
+      });
   });
   test("400: returns a msg when postbody has unauthorised key", () => {
     const postBody = {
       title: "Living in the shadow of a great man",
       topic: "mitch",
       author: "butter_bridge",
-      author_id : 1,
+      author_id: 1,
       body: "I find this existence challenging",
       article_img_url:
         "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
     };
 
     return request(app)
-    .post("/api/articles")
-    .send(postBody)
-    .expect(400)
-    .then(({body : {msg}})=>{
-      expect(msg).toBe("Bad Request")
-    })
+      .post("/api/articles")
+      .send(postBody)
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad Request");
+      });
   });
   test("404: returns a msg when user does not exist", () => {
     const postBody = {
@@ -801,12 +802,12 @@ describe("POST /api/article", () => {
     };
 
     return request(app)
-    .post("/api/articles")
-    .send(postBody)
-    .expect(404)
-    .then(({body : {msg}})=>{
-      expect(msg).toBe("Does Not Found")
-    })
+      .post("/api/articles")
+      .send(postBody)
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Does Not Found");
+      });
   });
   test("404: returns a msg when topic does not exist", () => {
     const postBody = {
@@ -819,12 +820,12 @@ describe("POST /api/article", () => {
     };
 
     return request(app)
-    .post("/api/articles")
-    .send(postBody)
-    .expect(404)
-    .then(({body : {msg}})=>{
-      expect(msg).toBe("Does Not Found")
-    })
+      .post("/api/articles")
+      .send(postBody)
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Does Not Found");
+      });
   });
   test("400: returns a msg when user value is empty", () => {
     const postBody = {
@@ -836,12 +837,136 @@ describe("POST /api/article", () => {
     };
 
     return request(app)
-    .post("/api/articles")
-    .send(postBody)
-    .expect(400)
-    .then(({body : {msg}})=>{
-      expect(msg).toBe("Bad Request")
-    })
+      .post("/api/articles")
+      .send(postBody)
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad Request");
+      });
   });
+});
 
+describe("GET /api/articles (pagination)", () => {
+  test("200: Returns first 10 elements of articles by default", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles).toHaveLength(10);
+        expect(articles).toBeSortedBy("created_at", { descending: true });
+
+        articles.forEach((article) => {
+          expect(article).toEqual(
+            expect.objectContaining({
+              author: expect.any(String),
+              title: expect.any(String),
+              article_id: expect.any(Number),
+              topic: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              article_img_url: expect.any(String),
+              comment_count: expect.any(Number),
+            })
+          );
+        });
+      });
+  });
+  test("200: Returns first 5 elements of articles", () => {
+    return request(app)
+      .get("/api/articles?sort_by=article_id&limit=5")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles).toHaveLength(5);
+        expect(articles[0].article_id).toBe(13);
+        expect(articles[4].article_id).toBe(9);
+        expect(articles).toBeSortedBy("article_id", { descending: true });
+        articles.forEach((article) => {
+          expect(article).toEqual(
+            expect.objectContaining({
+              author: expect.any(String),
+              title: expect.any(String),
+              article_id: expect.any(Number),
+              topic: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              article_img_url: expect.any(String),
+              comment_count: expect.any(Number),
+            })
+          );
+        });
+      });
+  });
+  test("200: Returns first 5 elements of articles", () => {
+    return request(app)
+      .get("/api/articles?sort_by=article_id&limit=5&p=2")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles).toHaveLength(5);
+        expect(articles[0].article_id).toBe(8);
+        expect(articles[4].article_id).toBe(4);
+        expect(articles).toBeSortedBy("article_id", { descending: true });
+        articles.forEach((article) => {
+          expect(article).toEqual(
+            expect.objectContaining({
+              author: expect.any(String),
+              title: expect.any(String),
+              article_id: expect.any(Number),
+              topic: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              article_img_url: expect.any(String),
+              comment_count: expect.any(Number),
+            })
+          );
+        });
+      });
+  });
+  test("400: Returns msg when limit is negative num", () => {
+    return request(app)
+      .get("/api/articles?sort_by=article_id&limit=-1")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad Request")
+      });
+  });
+  test("400: Returns msg when limit is NaN", () => {
+    return request(app)
+      .get("/api/articles?sort_by=article_id&limit=NaN")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad Request")
+      });
+  });
+  test("400: Returns msg when limit is 0", () => {
+    return request(app)
+      .get("/api/articles?sort_by=article_id&limit=0")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad Request")
+      });
+  });
+  test("400: Returns msg when page is 0", () => {
+    return request(app)
+      .get("/api/articles?sort_by=article_id&limit=5&p=0")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad Request")
+      });
+  });
+  test("400: Returns msg when page is negative", () => {
+    return request(app)
+      .get("/api/articles?sort_by=article_id&limit=5&p=-1")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad Request")
+      });
+  });
+  test("400: Returns msg when page is NaN", () => {
+    return request(app)
+      .get("/api/articles?sort_by=article_id&limit=5&p=NaN")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad Request")
+      });
+  });
 });
