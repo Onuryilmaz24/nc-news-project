@@ -3,12 +3,14 @@ const db = require("../db/connection");
 exports.selectAllCommentsById = (
   article_id,
   sort_by = "created_at",
-  order = "DESC"
+  order = "DESC",
+  limit=10,
+  p=1
 ) => {
   let sqlText = `SELECT * FROM comments`;
   let values = [];
   const validOrder = ["DESC", "ASC"];
-  const validSortBy = ["created_at"];
+  const validSortBy = ["created_at","comment_id"];
   if (!validOrder.includes(order) || !validSortBy.includes(sort_by)) {
     return Promise.reject({ status: 400, msg: "Bad Request" });
   }
@@ -19,6 +21,12 @@ exports.selectAllCommentsById = (
   }
 
   sqlText += ` ORDER BY ${sort_by} ${order}`;
+
+  const offset = (p - 1) * limit;
+
+  sqlText += ` LIMIT ${limit} OFFSET ${offset}`
+  
+
 
   return db.query(sqlText, values).then(({ rows }) => {
     return rows;

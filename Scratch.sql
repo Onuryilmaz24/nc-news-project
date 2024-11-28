@@ -1,6 +1,3 @@
 \c nc_news;
 
-SELECT * FROM articles;
-SELECT * FROM comments;
-SELECT * FROM topics;
-SELECT * FROM users;
+SELECT * FROM comments WHERE article_id = 1 ORDER BY comment_id DESC;
