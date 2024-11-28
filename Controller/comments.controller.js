@@ -8,9 +8,9 @@ const {
 
 exports.getArticleCommentsById = (req, res, next) => {
   const articleId = req.params.article_id;
-  const { sort_by, order } = req.query;
+  const { sort_by, order,limit,p} = req.query;
 
-  const promises = [selectAllCommentsById(articleId, sort_by, order)];
+  const promises = [selectAllCommentsById(articleId, sort_by, order,limit,p)];
 
   if (articleId) {
     promises.push(checkExist("articles", "article_id", articleId));

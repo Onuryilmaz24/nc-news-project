@@ -139,7 +139,7 @@ describe("GET /api/articles/:article_id/comments", () => {
       .get("/api/articles/1/comments")
       .expect(200)
       .then(({ body: { comments } }) => {
-        expect(comments).toHaveLength(11);
+        expect(comments).toHaveLength(10);
         expect(comments).toBeSortedBy("created_at", { descending: true });
         comments.forEach((comment) => {
           expect(comment).toEqual(
@@ -896,7 +896,7 @@ describe("GET /api/articles (pagination)", () => {
         });
       });
   });
-  test("200: Returns first 5 elements of articles", () => {
+  test("200: Returns second 5 elements of articles", () => {
     return request(app)
       .get("/api/articles?sort_by=article_id&limit=5&p=2")
       .expect(200)
@@ -970,3 +970,122 @@ describe("GET /api/articles (pagination)", () => {
       });
   });
 });
+describe("GET /api/articles/:article_id/comments (pagination)", () => {
+  test("200: Returns first 10 elements of articles by default", () => {
+    return request(app)
+      .get("/api/articles/1/comments")
+      .expect(200)
+      .then(({ body: { comments } }) => {
+        expect(comments).toHaveLength(10);
+        expect(comments).toBeSortedBy("created_at", { descending: true });
+
+        comments.forEach((comment) => {
+          expect(comment).toEqual(
+            expect.objectContaining({
+              comment_id: expect.any(Number),
+              body: expect.any(String),
+              article_id: expect.any(Number),
+              author: expect.any(String),
+              votes: expect.any(Number),
+              created_at: expect.any(String),
+            })
+          );
+        });
+      });
+  });
+  test("200: Returns first 5 elements of articles", () => {
+    return request(app)
+      .get("/api/articles/1/comments?sort_by=comment_id&limit=5")
+      .expect(200)
+      .then(({ body: { comments } }) => {
+        expect(comments).toHaveLength(5);
+        expect(comments[0].comment_id).toBe(18);
+        expect(comments[4].comment_id).toBe(8);
+        expect(comments).toBeSortedBy("comment_id", { descending: true });
+        comments.forEach((comment) => {
+          expect(comment).toEqual(
+            expect.objectContaining({
+              comment_id: expect.any(Number),
+              body: expect.any(String),
+              article_id: expect.any(Number),
+              author: expect.any(String),
+              votes: expect.any(Number),
+              created_at: expect.any(String),
+            })
+          );
+        });
+      });
+  });
+  test("200: Returns second 5 elements of articles", () => {
+    return request(app)
+      .get("/api/articles/1/comments?sort_by=comment_id&limit=5&p=2")
+      .expect(200)
+      .then(({ body: { comments } }) => {
+        expect(comments).toHaveLength(5);
+        expect(comments[0].comment_id).toBe(7);
+        expect(comments[4].comment_id).toBe(3);
+        expect(comments).toBeSortedBy("comment_id", { descending: true });
+        comments.forEach((comment) => {
+          expect(comment).toEqual(
+            expect.objectContaining({
+              comment_id: expect.any(Number),
+              body: expect.any(String),
+              article_id: expect.any(Number),
+              author: expect.any(String),
+              votes: expect.any(Number),
+              created_at: expect.any(String),
+            })
+          );
+        });
+      });
+  });
+  test("400: Returns msg when limit is negative num", () => {
+    return request(app)
+      .get("/api/articles/1/comments?sort_by=article_id&limit=-1")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad Request")
+      });
+  });
+  test("400: Returns msg when limit is NaN", () => {
+    return request(app)
+      .get("/api/articles/1/comments?sort_by=article_id&limit=NaN")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad Request")
+      });
+  });
+  test("400: Returns msg when limit is 0", () => {
+    return request(app)
+      .get("/api/articles/1/comments?sort_by=article_id&limit=0")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad Request")
+      });
+  });
+  test("400: Returns msg when page is 0", () => {
+    return request(app)
+      .get("/api/articles/1/comments?sort_by=article_id&limit=5&p=0")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad Request")
+      });
+  });
+  test("400: Returns msg when page is negative", () => {
+    return request(app)
+      .get("/api/articles/1/comments?sort_by=article_id&limit=5&p=-1")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad Request")
+      });
+  });
+  test("400: Returns msg when page is NaN", () => {
+    return request(app)
+      .get("/api/articles/1/comments?sort_by=article_id&limit=5&p=NaN")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad Request")
+      });
+  });
+});
+
