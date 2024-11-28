@@ -76,7 +76,7 @@ describe("GET /api/articles/:article_id", () => {
           votes: 100,
           article_img_url:
             "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
-          comment_count: 11
+          comment_count: 11,
         });
       });
   });
@@ -537,7 +537,7 @@ describe("GET /api/articles?topic=", () => {
             article_img_url: expect.any(String),
           });
         });
-        expect(articles).toBeSortedBy("created_at",{descending:true})
+        expect(articles).toBeSortedBy("created_at", { descending: true });
       });
   });
   test("200: Response with articles when topic query has value ", () => {
@@ -557,7 +557,7 @@ describe("GET /api/articles?topic=", () => {
             article_img_url: expect.any(String),
           });
         });
-        expect(articles).toBeSortedBy("created_at",{descending:true})
+        expect(articles).toBeSortedBy("created_at", { descending: true });
       });
   });
   test("200: Response with empty array if topic exist but there is no article in database with selected topic ", () => {
@@ -565,7 +565,7 @@ describe("GET /api/articles?topic=", () => {
       .get("/api/articles?topic=paper")
       .expect(200)
       .then(({ body: { articles } }) => {
-        expect(articles).toEqual([])
+        expect(articles).toEqual([]);
       });
   });
   test("404: Response with message when topic does not exist", () => {
@@ -573,133 +573,275 @@ describe("GET /api/articles?topic=", () => {
       .get("/api/articles?topic=topic1")
       .expect(404)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("Does Not Found")
+        expect(msg).toBe("Does Not Found");
       });
   });
 });
 
-describe('GET /api/users/:username', () => {
-  test('200: Returns with selected user', () => {
-      return request(app)
+describe("GET /api/users/:username", () => {
+  test("200: Returns with selected user", () => {
+    return request(app)
       .get("/api/users/butter_bridge")
       .expect(200)
-      .then(({body : {user}})=>{
+      .then(({ body: { user } }) => {
         expect(user).toMatchObject({
           username: expect.any(String),
           name: expect.any(String),
-          avatar_url: expect.any(String)
-        })
-      })
+          avatar_url: expect.any(String),
+        });
+      });
   });
-  test('404: Returns with msg when username does not exist ', () => {
+  test("404: Returns with msg when username does not exist ", () => {
     return request(app)
-    .get("/api/users/butter")
-    .expect(404)
-    .then(({body : {msg}})=>{
-      expect(msg).toBe("Does Not Found")
-    })
+      .get("/api/users/butter")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Does Not Found");
+      });
+  });
 });
-}); 
 
-describe('PATCH /api/comments/:comment_id', () => {
-  test('200: Should decrease comment vote', () => {
+describe("PATCH /api/comments/:comment_id", () => {
+  test("200: Should decrease comment vote", () => {
     const updateBody = {
       inc_vote: -1,
     };
     return request(app)
-    .patch("/api/comments/1")
-    .send(updateBody)
-    .expect(200)
-    .then(({body : {comment}})=>{
-      expect(comment).toMatchObject({
-        comment_id: 1,
-        body : expect.any(String),
-        article_id: 9,
-        author: "butter_bridge",
-        votes:15,
-        created_at: expect.any(String)
-      })
-    })
+      .patch("/api/comments/1")
+      .send(updateBody)
+      .expect(200)
+      .then(({ body: { comment } }) => {
+        expect(comment).toMatchObject({
+          comment_id: 1,
+          body: expect.any(String),
+          article_id: 9,
+          author: "butter_bridge",
+          votes: 15,
+          created_at: expect.any(String),
+        });
+      });
   });
-  test('200: Should increase comment vote', () => {
+  test("200: Should increase comment vote", () => {
     const updateBody = {
       inc_vote: 1,
     };
     return request(app)
-    .patch("/api/comments/1")
-    .send(updateBody)
-    .expect(200)
-    .then(({body : {comment}})=>{
-      expect(comment).toMatchObject({
-        comment_id: 1,
-        body : expect.any(String),
-        article_id: 9,
-        author: "butter_bridge",
-        votes:17,
-        created_at: expect.any(String)
-      })
-    })
+      .patch("/api/comments/1")
+      .send(updateBody)
+      .expect(200)
+      .then(({ body: { comment } }) => {
+        expect(comment).toMatchObject({
+          comment_id: 1,
+          body: expect.any(String),
+          article_id: 9,
+          author: "butter_bridge",
+          votes: 17,
+          created_at: expect.any(String),
+        });
+      });
   });
-  test('404: Should return msg when comment does not exists', () => {
+  test("404: Should return msg when comment does not exists", () => {
     const updateBody = {
       inc_vote: 1,
     };
     return request(app)
-    .patch("/api/comments/25")
-    .send(updateBody)
+      .patch("/api/comments/25")
+      .send(updateBody)
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Does Not Found");
+      });
+  });
+  test("400: Should return msg when comment_id has invalid format", () => {
+    const updateBody = {
+      inc_vote: 1,
+    };
+    return request(app)
+      .patch("/api/comments/one")
+      .send(updateBody)
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad Request");
+      });
+  });
+  test("400: Should return msg when update body is empty", () => {
+    const updateBody = {};
+    return request(app)
+      .patch("/api/comments/one")
+      .send(updateBody)
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad Request");
+      });
+  });
+  test("400: Should return msg when update body contains unvalid keys", () => {
+    const updateBody = {
+      inc_vote: 1,
+      author: "change_author",
+    };
+    return request(app)
+      .patch("/api/comments/one")
+      .send(updateBody)
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad Request");
+      });
+  });
+  test("400: Should return msg when inc_vote has invalid format", () => {
+    const updateBody = {
+      inc_vote: "1",
+    };
+    return request(app)
+      .patch("/api/comments/one")
+      .send(updateBody)
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad Request");
+      });
+  });
+});
+
+describe("POST /api/article", () => {
+  test("201: returns a posted body", () => {
+    const postBody = {
+      title: "Living in the shadow of a great man",
+      topic: "mitch",
+      author: "butter_bridge",
+      body: "I find this existence challenging",
+      article_img_url:
+        "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+    };
+
+    return request(app)
+    .post("/api/articles")
+    .send(postBody)
+    .expect(201)
+    .then(({body : {article}})=>{
+      expect(article).toMatchObject({
+        article_id: expect.any(Number),
+        title: postBody.title,
+        author: postBody.author,
+        body: postBody.body,
+        created_at: expect.any(String),
+        votes: expect.any(Number),
+        article_img_url: postBody.article_img_url,
+        comment_count: expect.any(Number)
+      })
+    })
+  });
+  test("201: returns a posted body and default img_url when img_url is not provided", () => {
+    const postBody = {
+      title: "Living in the shadow of a great man",
+      topic: "mitch",
+      author: "butter_bridge",
+      body: "I find this existence challenging",
+    };
+
+    return request(app)
+    .post("/api/articles")
+    .send(postBody)
+    .expect(201)
+    .then(({body : {article}})=>{
+      expect(article).toMatchObject({
+        article_id: expect.any(Number),
+        title: postBody.title,
+        author: postBody.author,
+        body: postBody.body,
+        created_at: expect.any(String),
+        votes: expect.any(Number),
+        article_img_url: "https://images.pexels.com/photos/97050/pexels-photo-97050.jpeg?w=700&h=700",
+        comment_count: expect.any(Number)
+      })
+    })
+  });
+  test("400: returns a msg when postbody has missing keys except than article_img_url", () => {
+    const postBody = {
+      title: "Living in the shadow of a great man",
+      author: "butter_bridge",
+      body: "I find this existence challenging",
+      article_img_url:
+        "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+    };
+
+    return request(app)
+    .post("/api/articles")
+    .send(postBody)
+    .expect(400)
+    .then(({body : {msg}})=>{
+      expect(msg).toBe("Bad Request")
+    })
+  });
+  test("400: returns a msg when postbody has unauthorised key", () => {
+    const postBody = {
+      title: "Living in the shadow of a great man",
+      topic: "mitch",
+      author: "butter_bridge",
+      author_id : 1,
+      body: "I find this existence challenging",
+      article_img_url:
+        "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+    };
+
+    return request(app)
+    .post("/api/articles")
+    .send(postBody)
+    .expect(400)
+    .then(({body : {msg}})=>{
+      expect(msg).toBe("Bad Request")
+    })
+  });
+  test("404: returns a msg when user does not exist", () => {
+    const postBody = {
+      title: "Living in the shadow of a great man",
+      topic: "mitch",
+      author: "another_user",
+      body: "I find this existence challenging",
+      article_img_url:
+        "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+    };
+
+    return request(app)
+    .post("/api/articles")
+    .send(postBody)
     .expect(404)
     .then(({body : {msg}})=>{
       expect(msg).toBe("Does Not Found")
     })
   });
-  test('400: Should return msg when comment_id has invalid format', () => {
-    const updateBody = {
-      inc_vote: 1,
+  test("404: returns a msg when topic does not exist", () => {
+    const postBody = {
+      title: "Living in the shadow of a great man",
+      topic: "another_topic",
+      author: "butter_bridge",
+      body: "I find this existence challenging",
+      article_img_url:
+        "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
     };
+
     return request(app)
-    .patch("/api/comments/one")
-    .send(updateBody)
+    .post("/api/articles")
+    .send(postBody)
+    .expect(404)
+    .then(({body : {msg}})=>{
+      expect(msg).toBe("Does Not Found")
+    })
+  });
+  test("400: returns a msg when user value is empty", () => {
+    const postBody = {
+      topic: "mitch",
+      author: "butter_bridge",
+      body: "I find this existence challenging",
+      article_img_url:
+        "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+    };
+
+    return request(app)
+    .post("/api/articles")
+    .send(postBody)
     .expect(400)
     .then(({body : {msg}})=>{
       expect(msg).toBe("Bad Request")
     })
   });
-  test('400: Should return msg when update body is empty', () => {
-    const updateBody = {
-    };
-    return request(app)
-    .patch("/api/comments/one")
-    .send(updateBody)
-    .expect(400)
-    .then(({body : {msg}})=>{
-      expect(msg).toBe("Bad Request")
-    })
-  });
-  test('400: Should return msg when update body contains unvalid keys', () => {
-    const updateBody = {
-      inc_vote: 1,
-      author : "change_author"
-    };
-    return request(app)
-    .patch("/api/comments/one")
-    .send(updateBody)
-    .expect(400)
-    .then(({body : {msg}})=>{
-      expect(msg).toBe("Bad Request")
-    })
-  });
-  test('400: Should return msg when inc_vote has invalid format', () => {
-    const updateBody = {
-      inc_vote: "1",
-    };
-    return request(app)
-    .patch("/api/comments/one")
-    .send(updateBody)
-    .expect(400)
-    .then(({body : {msg}})=>{
-      expect(msg).toBe("Bad Request")
-    })
-  });
+
 });
-
-
