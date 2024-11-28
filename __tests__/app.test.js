@@ -600,3 +600,106 @@ describe('GET /api/users/:username', () => {
     })
 });
 }); 
+
+describe('PATCH /api/comments/:comment_id', () => {
+  test('200: Should decrease comment vote', () => {
+    const updateBody = {
+      inc_vote: -1,
+    };
+    return request(app)
+    .patch("/api/comments/1")
+    .send(updateBody)
+    .expect(200)
+    .then(({body : {comment}})=>{
+      expect(comment).toMatchObject({
+        comment_id: 1,
+        body : expect.any(String),
+        article_id: 9,
+        author: "butter_bridge",
+        votes:15,
+        created_at: expect.any(String)
+      })
+    })
+  });
+  test('200: Should increase comment vote', () => {
+    const updateBody = {
+      inc_vote: 1,
+    };
+    return request(app)
+    .patch("/api/comments/1")
+    .send(updateBody)
+    .expect(200)
+    .then(({body : {comment}})=>{
+      expect(comment).toMatchObject({
+        comment_id: 1,
+        body : expect.any(String),
+        article_id: 9,
+        author: "butter_bridge",
+        votes:17,
+        created_at: expect.any(String)
+      })
+    })
+  });
+  test('404: Should return msg when comment does not exists', () => {
+    const updateBody = {
+      inc_vote: 1,
+    };
+    return request(app)
+    .patch("/api/comments/25")
+    .send(updateBody)
+    .expect(404)
+    .then(({body : {msg}})=>{
+      expect(msg).toBe("Does Not Found")
+    })
+  });
+  test('400: Should return msg when comment_id has invalid format', () => {
+    const updateBody = {
+      inc_vote: 1,
+    };
+    return request(app)
+    .patch("/api/comments/one")
+    .send(updateBody)
+    .expect(400)
+    .then(({body : {msg}})=>{
+      expect(msg).toBe("Bad Request")
+    })
+  });
+  test('400: Should return msg when update body is empty', () => {
+    const updateBody = {
+    };
+    return request(app)
+    .patch("/api/comments/one")
+    .send(updateBody)
+    .expect(400)
+    .then(({body : {msg}})=>{
+      expect(msg).toBe("Bad Request")
+    })
+  });
+  test('400: Should return msg when update body contains unvalid keys', () => {
+    const updateBody = {
+      inc_vote: 1,
+      author : "change_author"
+    };
+    return request(app)
+    .patch("/api/comments/one")
+    .send(updateBody)
+    .expect(400)
+    .then(({body : {msg}})=>{
+      expect(msg).toBe("Bad Request")
+    })
+  });
+  test('400: Should return msg when inc_vote has invalid format', () => {
+    const updateBody = {
+      inc_vote: "1",
+    };
+    return request(app)
+    .patch("/api/comments/one")
+    .send(updateBody)
+    .expect(400)
+    .then(({body : {msg}})=>{
+      expect(msg).toBe("Bad Request")
+    })
+  });
+});
+
+

@@ -50,3 +50,21 @@ exports.removeCommentById = (comment_id) => {
     return rows[0];
   });
 };
+
+exports.updateCommentVoteById = (comment_id, updateBody) => {
+  const validUpdate = ["inc_vote"];
+  if (!Object.keys(updateBody).every((key) => validUpdate.includes(key))) {
+    return Promise.reject({ status: 400, msg: "Bad Request" });
+  }
+
+  const { inc_vote } = updateBody;
+
+  let sqlText = `UPDATE comments
+  SET votes = votes + $1
+  WHERE comment_id = $2
+  RETURNING*;`;
+
+  return db.query(sqlText, [inc_vote, comment_id]).then(({ rows }) => {
+    return rows[0];
+  });
+};
