@@ -3,6 +3,7 @@ const {
   selectAllArticles,
   updateArticleVoteById,
   addNewArticle,
+  removeArticleById,
 } = require("../Models/articles.models");
 const { checkExist, countArticles } = require("../Models/api.utils");
 
@@ -66,4 +67,21 @@ exports.postArticle = (req,res,next) => {
   })
 
 
+}
+
+exports.deleteArticleById = (req,res,next) => {
+  const articleId = req.params.article_id
+
+  const promises = [removeArticleById(articleId)]
+
+  if(articleId){
+    promises.push(checkExist("articles","article_id",articleId))
+  }
+
+  Promise.all(promises).then(([article])=>{
+      res.status(204).send({article})
+  }).catch((err)=>{
+    console.log(err)
+    next(err)
+  })
 }

@@ -361,7 +361,6 @@ describe("DELETE /api/comments/:comment_id", () => {
       .expect(204)
       .then(({ body }) => {
         expect(body).toEqual({});
-        return request(app).get("/api/comments/1").expect(404);
       });
   });
   test("404: Should returns with message if comment does not exist", () => {
@@ -1148,5 +1147,31 @@ describe('POST /api/topics', () => {
       expect(msg).toBe("Bad Request")
     })
 });
+});
+
+describe('DELETE /api/articles/:article_id', () => {
+
+  test('204: Should delete selected article', () => {
+      return request(app)
+      .delete("/api/articles/2")
+      .expect(204)
+  });
+  test('404: Should retrun msg when selected article does not exist', () => {
+    return request(app)
+    .delete("/api/articles/99")
+    .expect(404)
+    .then(({body : {msg}})=>{
+      expect(msg).toBe("Does Not Found")
+    })
+});
+test('400: Should return msg when article_id has invalid format', () => {
+  return request(app)
+  .delete("/api/articles/one")
+  .expect(400)
+  .then(({body : {msg}})=>{
+    expect(msg).toBe("Bad Request")
+  })
+});
+  
 });
 

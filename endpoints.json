@@ -187,5 +187,11 @@
         }
       ]
     }
+  },
+  "DELETE /api/articles/:article_id": {
+    "description": "Deletes article by article_id ",
+    "queries": [],
+    "exampleResponse": {}
   }
+
 }
