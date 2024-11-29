@@ -41,7 +41,7 @@ exports.selectAllArticles = (
   const validSortBy = ["author","title","author","votes","created_at","comment_count","article_id"];
   const validOrder = ["DESC", "ASC"];
 
-  if (!validOrder.includes(order) || !validSortBy.includes(sort_by) || Number(limit) <= 0 ) {
+  if (!validOrder.includes(order) || !validSortBy.includes(sort_by) || Number(limit) === 0 ) {
     return Promise.reject({ status: 400, msg: "Bad Request" });
   }
 
@@ -54,7 +54,7 @@ exports.selectAllArticles = (
                     articles.article_img_url,
                     CAST(COUNT(comment_id) AS INTEGER) AS comment_count
                     FROM articles
-                    LEFT JOIN comments ON comments.article_id = articles.article_id
+                    LEFT JOIN comments ON comments.article_id = articles.article_id 
                     `;
 
   const values = [];
@@ -67,7 +67,7 @@ exports.selectAllArticles = (
   }
 
   if(values.length>0){
-    sqlText+= ` WHERE ${sqlTextValues.join(" AND ")}`
+    sqlText+= ` WHERE ${sqlTextValues.join(" AND ")} `
   }
 
   sqlText += ` GROUP BY articles.author,articles.title,articles.article_id,articles.topic,articles.created_at,articles.votes,articles.article_img_url`;
