@@ -129,3 +129,16 @@ exports.addNewArticle = (articleBody) => {
     return rows[0].article_id;
   })
 }
+
+exports.removeArticleById = (article_id) => {
+  const sqlTextArticles = "DELETE FROM articles WHERE article_id = $1 RETURNING*"
+  const sqlTextComments = "DELETE FROM comments WHERE article_id = $1"
+  const values = [article_id]
+
+  const commentsQuery = db.query(sqlTextComments,values)
+ const articleQuery = commentsQuery.then(() => db.query(sqlTextArticles, values));
+
+  return articleQuery.then(({ rows }) => {
+    return rows[0];
+  })
+}
