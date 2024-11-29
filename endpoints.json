@@ -10,8 +10,8 @@
     }
   },
   "GET /api/articles": {
-    "description": "serves an array of all article with default order DESC and sort_by date accepts topic query",
-    "queries": ["sort_by", "order", "topic"],
+    "description": "serves an array of all article with default order DESC and sort_by date accepts topic-limit-page queries",
+    "queries": ["sort_by", "order", "topic", "limit", "p"],
     "validSortBy": [
       "author",
       "title",
@@ -31,7 +31,10 @@
           "votes": 0,
           "comment_count": 6
         }
-      ]
+      ],
+      "total_count": {
+        "total_count": 13
+      }
     }
   },
   "GET /api/articles/:article_id": {
@@ -53,8 +56,8 @@
     }
   },
   "GET /api/articles/:article_id/comments": {
-    "description": "serves comments by article_id with most recent comments first",
-    "queries": [],
+    "description": "serves comments by article_id with most recent comments first with limit(default 10) and p(default 1) queries",
+    "queries": ["limit", "p"],
     "exampleResponse": {
       "comments": [
         {
@@ -144,7 +147,7 @@
     }
   },
   "POST /api/articles": {
-    "description": "serves comments by article_id with most recent comments first",
+    "description": "posts a new article ",
     "queries": [],
     "exampleBody": {
       "title": "Living in the shadow of a great man",
@@ -165,6 +168,22 @@
           "votes": 0,
           "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
           "comment_count": 1
+        }
+      ]
+    }
+  },
+  "POST /api/topics": {
+    "description": "posts a topic",
+    "queries": [],
+    "exampleBody": {
+      "slug": "topic name here",
+      "description": "description here"
+    },
+    "exampleResponse": {
+      "topics": [
+        {
+          "slug": "topic name here",
+          "description": "description here"
         }
       ]
     }

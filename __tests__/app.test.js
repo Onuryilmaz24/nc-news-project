@@ -1090,3 +1090,63 @@ describe("GET /api/articles/:article_id/comments (pagination)", () => {
   });
 });
 
+describe('POST /api/topics', () => {
+    test('201: Should return posted topic', () => {
+        const postBody = {
+          slug: "newtopic",
+          description: "This is a new topic"
+        }
+        return request(app)
+        .post("/api/topics")
+        .send(postBody)
+        .expect(201)
+        .then(({body: {topic}})=>{
+          expect(topic).toMatchObject({
+            slug: expect.any(String),
+            description: expect.any(String)
+          })
+        })
+    });
+    test('200: Should return posted topic even if desc key is missing', () => {
+      const postBody = {
+        slug: "newtopic",
+      }
+      return request(app)
+      .post("/api/topics")
+      .send(postBody)
+      .expect(201)
+      .then(({body: {topic}})=>{
+        expect(topic).toMatchObject({
+          slug: expect.any(String),
+          description: null
+        })
+      })
+  });
+    test('400: Should return msg when slug key is missing', () => {
+      const postBody = {
+        description: "This is a new topic"
+      }
+      return request(app)
+      .post("/api/topics")
+      .send(postBody)
+      .expect(400)
+      .then(({body: {msg}})=>{
+        expect(msg).toBe("Bad Request")
+      })
+  });
+  test('400: Should return msg when body contains unauthorised item', () => {
+    const postBody = {
+      slug: "newtopic",
+      description: "This is a new topic",
+      newcolumn : "newcolumn"
+    }
+    return request(app)
+    .post("/api/topics")
+    .send(postBody)
+    .expect(400)
+    .then(({body: {msg}})=>{
+      expect(msg).toBe("Bad Request")
+    })
+});
+});
+
