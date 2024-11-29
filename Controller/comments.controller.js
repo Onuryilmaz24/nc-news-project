@@ -1,4 +1,4 @@
-const { checkExist } = require("../Models/checkExists");
+const { checkExist } = require("../Models/api.utils");
 const {
   selectAllCommentsById,
   addCommentByArticleId,

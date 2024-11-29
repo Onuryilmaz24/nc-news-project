@@ -520,7 +520,7 @@ describe("GET /api/articles?sort_by=&order=", () => {
 });
 
 describe("GET /api/articles?topic=", () => {
-  test("200: Response with articles when topic query is empy ", () => {
+  test("200: Response with articles when topic query is empty ", () => {
     return request(app)
       .get("/api/articles?topic=")
       .expect(200)
@@ -851,10 +851,10 @@ describe("GET /api/articles (pagination)", () => {
     return request(app)
       .get("/api/articles")
       .expect(200)
-      .then(({ body: { articles } }) => {
+      .then(({ body: { articles , total_count } }) => {
+        expect(total_count).toBe(13)
         expect(articles).toHaveLength(10);
         expect(articles).toBeSortedBy("created_at", { descending: true });
-
         articles.forEach((article) => {
           expect(article).toEqual(
             expect.objectContaining({
@@ -875,7 +875,8 @@ describe("GET /api/articles (pagination)", () => {
     return request(app)
       .get("/api/articles?sort_by=article_id&limit=5")
       .expect(200)
-      .then(({ body: { articles } }) => {
+      .then(({ body: { articles , total_count} }) => {
+        expect(total_count).toBe(13)
         expect(articles).toHaveLength(5);
         expect(articles[0].article_id).toBe(13);
         expect(articles[4].article_id).toBe(9);
@@ -900,7 +901,8 @@ describe("GET /api/articles (pagination)", () => {
     return request(app)
       .get("/api/articles?sort_by=article_id&limit=5&p=2")
       .expect(200)
-      .then(({ body: { articles } }) => {
+      .then(({ body: { articles ,total_count} }) => {
+        expect(total_count).toBe(13)
         expect(articles).toHaveLength(5);
         expect(articles[0].article_id).toBe(8);
         expect(articles[4].article_id).toBe(4);
@@ -978,7 +980,6 @@ describe("GET /api/articles/:article_id/comments (pagination)", () => {
       .then(({ body: { comments } }) => {
         expect(comments).toHaveLength(10);
         expect(comments).toBeSortedBy("created_at", { descending: true });
-
         comments.forEach((comment) => {
           expect(comment).toEqual(
             expect.objectContaining({

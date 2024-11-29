@@ -9,3 +9,15 @@ exports.checkExist = async(table,column,value) =>{
         return Promise.reject({status: 404, msg: "Does Not Found"})
     }
 }
+
+exports.countArticles = (topic) => {
+    let queryStr = `SELECT * FROM articles`
+    const queryValues = [];
+    if(topic){
+        queryStr += ` WHERE topic = $1`;
+        queryValues.push(topic)
+    }
+    return db.query(queryStr,queryValues).then(({rows})=>{
+        return rows.length;
+    })
+}
