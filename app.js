@@ -1,6 +1,12 @@
+const cors = require("cors")
+
 const express = require("express");
 const { customErrorHandler, postgresErrorHandler } = require("./errorHandler");
+
+
+
 const app = express();
+app.use(cors());
 const apiRouter = require("./Routers/api-router")
 
 app.use(express.json());
