@@ -57,7 +57,7 @@
   },
   "GET /api/articles/:article_id/comments": {
     "description": "serves comments by article_id with most recent comments first with limit(default 10) and p(default 1) queries",
-    "queries": ["limit", "p"],
+    "queries": ["limit", "p" ,"order" ,""],
     "exampleResponse": {
       "comments": [
         {
