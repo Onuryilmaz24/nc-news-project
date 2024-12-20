@@ -29,7 +29,7 @@ const seed = ({ topicData, userData, articleData, commentData }) => {
       CREATE TABLE users (
         username VARCHAR PRIMARY KEY,
         name VARCHAR NOT NULL,
-        avatar_url VARCHAR
+        avatar_url VARCHAR DEFAULT 'https://avatars2.githubusercontent.com/u/24394918?s=400&v=4'
       );`);
 
       return Promise.all([topicsTablePromise, usersTablePromise]);

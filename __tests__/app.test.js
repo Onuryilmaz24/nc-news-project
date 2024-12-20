@@ -1175,3 +1175,72 @@ test('400: Should return msg when article_id has invalid format', () => {
   
 });
 
+
+describe.only('POST /api/users', () => {
+    test('201: Should post a new user to endpoint and response with newly added user', () => {
+
+        const postBody = {
+          username:"onuryilmaz",
+          name: "Onur Yilmaz",
+          avatar_url: "https://vignette.wikia.nocookie.net/mrmen/images/4/4f/MR_JELLY_4A.jpg/revision/latest?cb=20180104121141"
+        }
+        return request(app)
+        .post("/api/users")
+        .send(postBody)
+        .expect(201)
+        .then(({body:{user}})=>{
+          expect(user).toEqual(postBody)
+        })
+    });
+    test('400: Returns with msg when username is empty', () => {
+
+      const postBody = {
+        username:"",
+        name: "Onur Yilmaz",
+        avatar_url: "https://vignette.wikia.nocookie.net/mrmen/images/4/4f/MR_JELLY_4A.jpg/revision/latest?cb=20180104121141"
+      }
+      return request(app)
+      .post("/api/users")
+      .send(postBody)
+      .expect(400)
+      .then(({body:{msg}})=>{
+        expect(msg).toBe("Bad Request")
+      })
+  });
+  test('400: Returns with msg when username is empty', () => {
+
+    const postBody = {
+      username:"onuryilmaz",
+      name: "",
+      avatar_url: "https://vignette.wikia.nocookie.net/mrmen/images/4/4f/MR_JELLY_4A.jpg/revision/latest?cb=20180104121141"
+    }
+    return request(app)
+    .post("/api/users")
+    .send(postBody)
+    .expect(400)
+    .then(({body:{msg}})=>{
+      expect(msg).toBe("Bad Request")
+    })
+});
+test('201: Should post a new user to endpoint and response with newly added user does not have avatar url', () => {
+
+  const postBody = {
+    username:"onuryilmaz",
+    name: "Onur Yilmaz",
+  }
+  return request(app)
+  .post("/api/users")
+  .send(postBody)
+  .expect(201)
+  .then(({ body: { user } }) => {
+    expect(user).toMatchObject({
+      username: expect.any(String),
+      name: expect.any(String),
+      avatar_url:
+        "https://avatars2.githubusercontent.com/u/24394918?s=400&v=4",
+      
+    });
+  })
+});
+});
+
