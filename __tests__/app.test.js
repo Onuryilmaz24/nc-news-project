@@ -1176,7 +1176,7 @@ test('400: Should return msg when article_id has invalid format', () => {
 });
 
 
-describe.only('POST /api/users', () => {
+describe('POST /api/users', () => {
     test('201: Should post a new user to endpoint and response with newly added user', () => {
 
         const postBody = {
