@@ -850,8 +850,8 @@ describe("GET /api/articles (pagination)", () => {
     return request(app)
       .get("/api/articles")
       .expect(200)
-      .then(({ body: { articles , total_count } }) => {
-        expect(total_count).toBe(13)
+      .then(({ body: { articles, total_count } }) => {
+        expect(total_count).toBe(13);
         expect(articles).toHaveLength(10);
         expect(articles).toBeSortedBy("created_at", { descending: true });
         articles.forEach((article) => {
@@ -874,8 +874,8 @@ describe("GET /api/articles (pagination)", () => {
     return request(app)
       .get("/api/articles?sort_by=article_id&limit=5")
       .expect(200)
-      .then(({ body: { articles , total_count} }) => {
-        expect(total_count).toBe(13)
+      .then(({ body: { articles, total_count } }) => {
+        expect(total_count).toBe(13);
         expect(articles).toHaveLength(5);
         expect(articles[0].article_id).toBe(13);
         expect(articles[4].article_id).toBe(9);
@@ -900,8 +900,8 @@ describe("GET /api/articles (pagination)", () => {
     return request(app)
       .get("/api/articles?sort_by=article_id&limit=5&p=2")
       .expect(200)
-      .then(({ body: { articles ,total_count} }) => {
-        expect(total_count).toBe(13)
+      .then(({ body: { articles, total_count } }) => {
+        expect(total_count).toBe(13);
         expect(articles).toHaveLength(5);
         expect(articles[0].article_id).toBe(8);
         expect(articles[4].article_id).toBe(4);
@@ -927,7 +927,7 @@ describe("GET /api/articles (pagination)", () => {
       .get("/api/articles?sort_by=article_id&limit=-1")
       .expect(400)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("Bad Request")
+        expect(msg).toBe("Bad Request");
       });
   });
   test("400: Returns msg when limit is NaN", () => {
@@ -935,7 +935,7 @@ describe("GET /api/articles (pagination)", () => {
       .get("/api/articles?sort_by=article_id&limit=NaN")
       .expect(400)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("Bad Request")
+        expect(msg).toBe("Bad Request");
       });
   });
   test("400: Returns msg when limit is 0", () => {
@@ -943,7 +943,7 @@ describe("GET /api/articles (pagination)", () => {
       .get("/api/articles?sort_by=article_id&limit=0")
       .expect(400)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("Bad Request")
+        expect(msg).toBe("Bad Request");
       });
   });
   test("400: Returns msg when page is 0", () => {
@@ -951,7 +951,7 @@ describe("GET /api/articles (pagination)", () => {
       .get("/api/articles?sort_by=article_id&limit=5&p=0")
       .expect(400)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("Bad Request")
+        expect(msg).toBe("Bad Request");
       });
   });
   test("400: Returns msg when page is negative", () => {
@@ -959,7 +959,7 @@ describe("GET /api/articles (pagination)", () => {
       .get("/api/articles?sort_by=article_id&limit=5&p=-1")
       .expect(400)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("Bad Request")
+        expect(msg).toBe("Bad Request");
       });
   });
   test("400: Returns msg when page is NaN", () => {
@@ -967,7 +967,7 @@ describe("GET /api/articles (pagination)", () => {
       .get("/api/articles?sort_by=article_id&limit=5&p=NaN")
       .expect(400)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("Bad Request")
+        expect(msg).toBe("Bad Request");
       });
   });
 });
@@ -1044,7 +1044,7 @@ describe("GET /api/articles/:article_id/comments (pagination)", () => {
       .get("/api/articles/1/comments?sort_by=article_id&limit=-1")
       .expect(400)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("Bad Request")
+        expect(msg).toBe("Bad Request");
       });
   });
   test("400: Returns msg when limit is NaN", () => {
@@ -1052,7 +1052,7 @@ describe("GET /api/articles/:article_id/comments (pagination)", () => {
       .get("/api/articles/1/comments?sort_by=article_id&limit=NaN")
       .expect(400)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("Bad Request")
+        expect(msg).toBe("Bad Request");
       });
   });
   test("400: Returns msg when limit is 0", () => {
@@ -1060,7 +1060,7 @@ describe("GET /api/articles/:article_id/comments (pagination)", () => {
       .get("/api/articles/1/comments?sort_by=article_id&limit=0")
       .expect(400)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("Bad Request")
+        expect(msg).toBe("Bad Request");
       });
   });
   test("400: Returns msg when page is 0", () => {
@@ -1068,7 +1068,7 @@ describe("GET /api/articles/:article_id/comments (pagination)", () => {
       .get("/api/articles/1/comments?sort_by=article_id&limit=5&p=0")
       .expect(400)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("Bad Request")
+        expect(msg).toBe("Bad Request");
       });
   });
   test("400: Returns msg when page is negative", () => {
@@ -1076,7 +1076,7 @@ describe("GET /api/articles/:article_id/comments (pagination)", () => {
       .get("/api/articles/1/comments?sort_by=article_id&limit=5&p=-1")
       .expect(400)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("Bad Request")
+        expect(msg).toBe("Bad Request");
       });
   });
   test("400: Returns msg when page is NaN", () => {
@@ -1084,163 +1084,169 @@ describe("GET /api/articles/:article_id/comments (pagination)", () => {
       .get("/api/articles/1/comments?sort_by=article_id&limit=5&p=NaN")
       .expect(400)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("Bad Request")
+        expect(msg).toBe("Bad Request");
       });
   });
 });
 
-describe('POST /api/topics', () => {
-    test('201: Should return posted topic', () => {
-        const postBody = {
-          slug: "newtopic",
-          description: "This is a new topic"
-        }
-        return request(app)
-        .post("/api/topics")
-        .send(postBody)
-        .expect(201)
-        .then(({body: {topic}})=>{
-          expect(topic).toMatchObject({
-            slug: expect.any(String),
-            description: expect.any(String)
-          })
-        })
-    });
-    test('200: Should return posted topic even if desc key is missing', () => {
-      const postBody = {
-        slug: "newtopic",
-      }
-      return request(app)
-      .post("/api/topics")
-      .send(postBody)
-      .expect(201)
-      .then(({body: {topic}})=>{
-        expect(topic).toMatchObject({
-          slug: expect.any(String),
-          description: null
-        })
-      })
-  });
-    test('400: Should return msg when slug key is missing', () => {
-      const postBody = {
-        description: "This is a new topic"
-      }
-      return request(app)
-      .post("/api/topics")
-      .send(postBody)
-      .expect(400)
-      .then(({body: {msg}})=>{
-        expect(msg).toBe("Bad Request")
-      })
-  });
-  test('400: Should return msg when body contains unauthorised item', () => {
+describe("POST /api/topics", () => {
+  test("201: Should return posted topic", () => {
     const postBody = {
       slug: "newtopic",
       description: "This is a new topic",
-      newcolumn : "newcolumn"
-    }
+    };
     return request(app)
-    .post("/api/topics")
-    .send(postBody)
-    .expect(400)
-    .then(({body: {msg}})=>{
-      expect(msg).toBe("Bad Request")
-    })
-});
-});
-
-describe('DELETE /api/articles/:article_id', () => {
-
-  test('204: Should delete selected article', () => {
-      return request(app)
-      .delete("/api/articles/2")
-      .expect(204)
+      .post("/api/topics")
+      .send(postBody)
+      .expect(201)
+      .then(({ body: { topic } }) => {
+        expect(topic).toMatchObject({
+          slug: expect.any(String),
+          description: expect.any(String),
+        });
+      });
   });
-  test('404: Should retrun msg when selected article does not exist', () => {
+  test("200: Should return posted topic even if desc key is missing", () => {
+    const postBody = {
+      slug: "newtopic",
+    };
     return request(app)
-    .delete("/api/articles/99")
-    .expect(404)
-    .then(({body : {msg}})=>{
-      expect(msg).toBe("Does Not Found")
-    })
+      .post("/api/topics")
+      .send(postBody)
+      .expect(201)
+      .then(({ body: { topic } }) => {
+        expect(topic).toMatchObject({
+          slug: expect.any(String),
+          description: null,
+        });
+      });
+  });
+  test("400: Should return msg when slug key is missing", () => {
+    const postBody = {
+      description: "This is a new topic",
+    };
+    return request(app)
+      .post("/api/topics")
+      .send(postBody)
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad Request");
+      });
+  });
+  test("400: Should return msg when body contains unauthorised item", () => {
+    const postBody = {
+      slug: "newtopic",
+      description: "This is a new topic",
+      newcolumn: "newcolumn",
+    };
+    return request(app)
+      .post("/api/topics")
+      .send(postBody)
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad Request");
+      });
+  });
 });
-test('400: Should return msg when article_id has invalid format', () => {
-  return request(app)
-  .delete("/api/articles/one")
-  .expect(400)
-  .then(({body : {msg}})=>{
-    expect(msg).toBe("Bad Request")
-  })
+
+describe("DELETE /api/articles/:article_id", () => {
+  test("204: Should delete selected article", () => {
+    return request(app).delete("/api/articles/2").expect(204);
+  });
+  test("404: Should retrun msg when selected article does not exist", () => {
+    return request(app)
+      .delete("/api/articles/99")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Does Not Found");
+      });
+  });
+  test("400: Should return msg when article_id has invalid format", () => {
+    return request(app)
+      .delete("/api/articles/one")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad Request");
+      });
+  });
 });
-  
-});
 
-
-describe('POST /api/users', () => {
-    test('201: Should post a new user to endpoint and response with newly added user', () => {
-
-        const postBody = {
-          username:"onuryilmaz",
-          name: "Onur Yilmaz",
-          avatar_url: "https://vignette.wikia.nocookie.net/mrmen/images/4/4f/MR_JELLY_4A.jpg/revision/latest?cb=20180104121141"
-        }
-        return request(app)
-        .post("/api/users")
-        .send(postBody)
-        .expect(201)
-        .then(({body:{user}})=>{
-          expect(user).toEqual(postBody)
-        })
-    });
-    test('400: Returns with msg when username is empty', () => {
-
-      const postBody = {
-        username:"",
-        name: "Onur Yilmaz",
-        avatar_url: "https://vignette.wikia.nocookie.net/mrmen/images/4/4f/MR_JELLY_4A.jpg/revision/latest?cb=20180104121141"
-      }
-      return request(app)
+describe("POST /api/users", () => {
+  test("201: Should post a new user to endpoint and response with newly added user", () => {
+    const postBody = {
+      username: "onuryilmaz",
+      name: "Onur Yilmaz",
+      avatar_url:
+        "https://vignette.wikia.nocookie.net/mrmen/images/4/4f/MR_JELLY_4A.jpg/revision/latest?cb=20180104121141",
+    };
+    return request(app)
+      .post("/api/users")
+      .send(postBody)
+      .expect(201)
+      .then(({ body: { user } }) => {
+        expect(user).toEqual(postBody);
+      });
+  });
+  test("400: Returns with msg when username is empty", () => {
+    const postBody = {
+      username: "",
+      name: "Onur Yilmaz",
+      avatar_url:
+        "https://vignette.wikia.nocookie.net/mrmen/images/4/4f/MR_JELLY_4A.jpg/revision/latest?cb=20180104121141",
+    };
+    return request(app)
       .post("/api/users")
       .send(postBody)
       .expect(400)
-      .then(({body:{msg}})=>{
-        expect(msg).toBe("Bad Request")
-      })
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad Request");
+      });
   });
-  test('400: Returns with msg when username is empty', () => {
-
+  test("400: Returns with msg when username is empty", () => {
     const postBody = {
-      username:"onuryilmaz",
+      username: "onuryilmaz",
       name: "",
-      avatar_url: "https://vignette.wikia.nocookie.net/mrmen/images/4/4f/MR_JELLY_4A.jpg/revision/latest?cb=20180104121141"
-    }
-    return request(app)
-    .post("/api/users")
-    .send(postBody)
-    .expect(400)
-    .then(({body:{msg}})=>{
-      expect(msg).toBe("Bad Request")
-    })
-});
-test('201: Should post a new user to endpoint and response with newly added user does not have avatar url', () => {
-
-  const postBody = {
-    username:"onuryilmaz",
-    name: "Onur Yilmaz",
-  }
-  return request(app)
-  .post("/api/users")
-  .send(postBody)
-  .expect(201)
-  .then(({ body: { user } }) => {
-    expect(user).toMatchObject({
-      username: expect.any(String),
-      name: expect.any(String),
       avatar_url:
-        "https://avatars2.githubusercontent.com/u/24394918?s=400&v=4",
-      
-    });
-  })
-});
+        "https://vignette.wikia.nocookie.net/mrmen/images/4/4f/MR_JELLY_4A.jpg/revision/latest?cb=20180104121141",
+    };
+    return request(app)
+      .post("/api/users")
+      .send(postBody)
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Bad Request");
+      });
+  });
+  test("201: Should post a new user to endpoint and response with newly added user does not have avatar url", () => {
+    const postBody = {
+      username: "onuryilmaz",
+      name: "Onur Yilmaz",
+    };
+    return request(app)
+      .post("/api/users")
+      .send(postBody)
+      .expect(201)
+      .then(({ body: { user } }) => {
+        expect(user).toMatchObject({
+          username: expect.any(String),
+          name: expect.any(String),
+          avatar_url:
+            "https://avatars2.githubusercontent.com/u/24394918?s=400&v=4",
+        });
+      });
+  });
 });
 
+describe("DELETE /api/users/:username", () => {
+  test("204: Should delete selected user", () => {
+    return request(app).delete("/api/users/butter_bridge").expect(204);
+  });
+  test("404: Should return msg when selected user does not exist", () => {
+    return request(app)
+      .delete("/api/users/username1")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("Does Not Found")
+      });
+  });
+});

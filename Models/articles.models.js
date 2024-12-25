@@ -35,13 +35,25 @@ exports.selectAllArticles = (
   order = "DESC",
   votes,
   comment_count,
-  limit =10,
-  p=1
+  limit = 10,
+  p = 1
 ) => {
-  const validSortBy = ["author","title","author","votes","created_at","comment_count","article_id"];
+  const validSortBy = [
+    "author",
+    "title",
+    "author",
+    "votes",
+    "created_at",
+    "comment_count",
+    "article_id",
+  ];
   const validOrder = ["DESC", "ASC"];
 
-  if (!validOrder.includes(order) || !validSortBy.includes(sort_by) || Number(limit) === 0 ) {
+  if (
+    !validOrder.includes(order) ||
+    !validSortBy.includes(sort_by) ||
+    Number(limit) === 0
+  ) {
     return Promise.reject({ status: 400, msg: "Bad Request" });
   }
 
@@ -60,24 +72,23 @@ exports.selectAllArticles = (
   const values = [];
   const sqlTextValues = [];
 
-
-  if(topic){
-    sqlTextValues.push(`articles.topic = $${values.length +1}`)
-    values.push(topic)
+  if (topic) {
+    sqlTextValues.push(`articles.topic = $${values.length + 1}`);
+    values.push(topic);
   }
 
-  if(values.length>0){
-    sqlText+= ` WHERE ${sqlTextValues.join(" AND ")} `
+  if (values.length > 0) {
+    sqlText += ` WHERE ${sqlTextValues.join(" AND ")} `;
   }
 
   sqlText += ` GROUP BY articles.author,articles.title,articles.article_id,articles.topic,articles.created_at,articles.votes,articles.article_img_url`;
 
   sqlText += ` ORDER BY ${sort_by} ${order}`;
 
-  const offset = (p -1) * limit;
-  sqlText += ` LIMIT ${limit} OFFSET ${offset}`
+  const offset = (p - 1) * limit;
+  sqlText += ` LIMIT ${limit} OFFSET ${offset}`;
 
-  return db.query(sqlText,values).then(({ rows }) => {
+  return db.query(sqlText, values).then(({ rows }) => {
     return rows;
   });
 };
@@ -104,14 +115,18 @@ exports.updateArticleVoteById = (article_id, updateBody) => {
 };
 
 exports.addNewArticle = (articleBody) => {
-  const validColumns = ["title","topic","author","body","article_img_url"]
+  const validColumns = ["title", "topic", "author", "body", "article_img_url"];
 
-  if(!Object.keys(articleBody).every((key)=>{return validColumns.includes(key)})){
+  if (
+    !Object.keys(articleBody).every((key) => {
+      return validColumns.includes(key);
+    })
+  ) {
     return Promise.reject({ status: 400, msg: "Bad Request" });
   }
 
-  const {title,topic,author,body,article_img_url} = articleBody;
-  const values = [title,topic,author,body]
+  const { title, topic, author, body, article_img_url } = articleBody;
+  const values = [title, topic, author, body];
   if (article_img_url) {
     sqlInsertQuery = `
       INSERT INTO articles(title, topic, author, body, article_img_url)
@@ -125,20 +140,19 @@ exports.addNewArticle = (articleBody) => {
       RETURNING *`;
   }
 
-  return db.query(sqlInsertQuery,values).then(({rows})=>{
+  return db.query(sqlInsertQuery, values).then(({ rows }) => {
     return rows[0].article_id;
-  })
-}
+  });
+};
 
 exports.removeArticleById = (article_id) => {
-  const sqlTextArticles = "DELETE FROM articles WHERE article_id = $1 RETURNING*"
-  const sqlTextComments = "DELETE FROM comments WHERE article_id = $1"
-  const values = [article_id]
+  const sqlTextArticles =
+    "DELETE FROM articles WHERE article_id = $1 RETURNING*";
+  const values = [article_id];
 
-  const commentsQuery = db.query(sqlTextComments,values)
- const articleQuery = commentsQuery.then(() => db.query(sqlTextArticles, values));
+  const articleQuery = db.query(sqlTextArticles, values);
 
   return articleQuery.then(({ rows }) => {
     return rows[0];
-  })
-}
+  });
+};

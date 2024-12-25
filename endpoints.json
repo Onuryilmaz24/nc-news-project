@@ -12,13 +12,16 @@
   "GET /api/articles": {
     "description": "serves an array of all article with default order DESC and sort_by date accepts topic-limit-page queries",
     "queries": ["sort_by", "order", "topic", "limit", "p"],
-    "validSortBy": [
+    "sort_by": [
       "author",
       "title",
       "author",
       "votes",
       "created_at",
       "comment_count"
+    ],
+    "order":[
+      "ASC","DESC"
     ],
     "exampleResponse": {
       "articles": [
@@ -57,7 +60,8 @@
   },
   "GET /api/articles/:article_id/comments": {
     "description": "serves comments by article_id with most recent comments first with limit(default 10) and p(default 1) queries",
-    "queries": ["limit", "p" ,"order" ,""],
+    "queries": ["limit", "p" ,"order"],
+    "order":["ASC","DESC"],
     "exampleResponse": {
       "comments": [
         {
@@ -72,7 +76,7 @@
     }
   },
   "POST /api/articles/:article_id/comments": {
-    "description": "serves comments by article_id with most recent comments first",
+    "description": "posts a new comments to the selected article",
     "queries": [],
     "exampleBody": {
       "username": "butter_bridge",
@@ -104,7 +108,7 @@
       "author": "weegembump",
       "body": "Text from the article..",
       "created_at": "2018-05-30T15:59:13.341Z",
-      "votes": 0,
+      "votes": 1,
       "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
     }
   },
@@ -131,6 +135,27 @@
       "avatar_url": "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
     }
   },
+  "POST /api/users": {
+    "description": "Posts a new user needs username and name url does not required.",
+    "queries": [],
+    "exampleBody": {
+      "username": "butter_bridge",
+      "name": "jhonny",
+      "avatar_url": "https://vignette.wikia.nocookie.net/mrmen/images/4/4f/MR_JELLY_4A.jpg/revision/latest?cb=20180104121141"
+    },
+    "exampleResponse": {
+      "username": "butter_bridge",
+      "name": "jhonny",
+      "avatar_url": "https://vignette.wikia.nocookie.net/mrmen/images/4/4f/MR_JELLY_4A.jpg/revision/latest?cb=20180104121141"
+    }
+  },
+  "DELETE /api/users/:username": {
+    "description": "Deletes selected user with all articles and comments",
+    "queries": [],
+    "exampleResponse": {
+    }
+  },
+
   "PATCH /api/comments/:comment_id": {
     "description": "patch'es comments for only vote",
     "queries": [],

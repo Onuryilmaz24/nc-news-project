@@ -52,3 +52,13 @@ exports.addNewUser = (postBody) => {
 })
 
 }
+
+exports.deleteUserByUsername = (username) => {
+
+  const sqlText = `DELETE FROM users WHERE username = $1`
+  const values = [username]
+
+  return db.query(sqlText,values).then(({rows})=>{
+    return rows[0]
+  })
+}
