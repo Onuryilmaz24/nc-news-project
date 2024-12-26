@@ -64,12 +64,12 @@ git clone https://https://github.com/Onuryilmaz24/nc-news-project.git
     + supertest
 
 To get these running on your machine, run this command in your terminal:
-
-   ``bash
-     npm install
-     ```
+  ```bash
+   npm install
+   ```      
+     
 4. Setup Database
-   - In order to setup test and development database you will need to create 2 files in root directory:
+   - In order to setup test and development database you need to set up two `.env` files in root directory:
    - .env.test
        - Inside this file you need to write:
          ` PGDATABASE=nc_news_test`
@@ -94,23 +94,6 @@ To get these running on your machine, run this command in your terminal:
    npm start
    ```
 
-## Environment Variables
-
-You need to set up two `.env` files:
-
-1. **`.env.development`** for local development.
-2. **`.env.test`** for testing purposes.
-
-### Example `.env.development` file:
-```env
-DATABASE_URL= your development database
-```
-
-### Example `.env.test` file:
-```env
-DATABASE_URL= your test database
-```
-
 ---
 ## Technology Stack
 
@@ -129,4 +112,5 @@ Run the test suite with the following command:
 npm test
 
 ```
-
+---
+"This project was created by [Onur Yilmaz](https://github.com/Onuryilmaz24) as part of the Digital Skills Bootcamp in Software Engineering course provided by [NorthCoders](https://northcoders.com/)."
