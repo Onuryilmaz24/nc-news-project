@@ -23,7 +23,7 @@ A live version of this API is hosted online. Follow the link below to explore de
 
 Hosted version of the project: [Here](https://nc-news-project-w66a.onrender.com/api)
 
-For Chrome users, we recommend installing a JSON viewer extension to better format the API responses for easier readability.
+For Chrome users, recommend installing a JSON viewer extension to better format the API responses for easier readability.
 
 ---
 
