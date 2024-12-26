@@ -64,7 +64,8 @@ git clone https://https://github.com/Onuryilmaz24/nc-news-project.git
     + supertest
 
 To get these running on your machine, run this command in your terminal:
-   ```bash
+
+   ``bash
      npm install
      ```
 4. Setup Database
