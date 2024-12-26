@@ -93,6 +93,41 @@ exports.selectAllArticles = (
   });
 };
 
+exports.selectAllArticlesByUsername = (
+  username,
+  sort_by = "created_at",
+  order = "DESC"
+) => {
+  const validOrder = ["DESC","ASC"]
+  const validSortBy = ["created_at"]
+
+  const values = [username]
+
+  if(!validOrder.includes(order) || !validSortBy.includes(sort_by)){
+    return Promise.reject({ status: 400, msg: "Bad Request" });
+  }
+
+  let sqlText  = `SELECT articles.author,
+                    articles.title,
+                    articles.article_id,
+                    articles.topic,
+                    articles.created_at,
+                    articles.votes,
+                    articles.article_img_url,
+                    CAST(COUNT(comment_id) AS INTEGER) AS comment_count
+                    FROM articles
+                    LEFT JOIN comments ON comments.article_id = articles.article_id 
+                    `
+    
+    sqlText += ` WHERE articles.author = $1`
+    sqlText += ` GROUP BY articles.author,articles.title,articles.article_id,articles.topic,articles.created_at,articles.votes,articles.article_img_url`;
+    sqlText += ` ORDER BY ${sort_by} ${order}`
+
+    return db.query(sqlText,values).then(({rows})=>{
+      return rows
+    })
+};
+
 exports.updateArticleVoteById = (article_id, updateBody) => {
   const validUpdate = ["inc_vote"];
   if (

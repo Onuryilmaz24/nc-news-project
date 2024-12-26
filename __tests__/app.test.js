@@ -1246,7 +1246,43 @@ describe("DELETE /api/users/:username", () => {
       .delete("/api/users/username1")
       .expect(404)
       .then(({ body: { msg } }) => {
-        expect(msg).toBe("Does Not Found")
+        expect(msg).toBe("Does Not Found");
       });
   });
+});
+
+describe("GET /api/users/:username/articles", () => {
+  test("200: Returns an array with users article", () => {
+    return request(app)
+    .get("/api/users/butter_bridge/articles")
+    .expect(200)
+    .then(({body : {articles}})=>{
+      expect(articles).toHaveLength(4)
+      articles.forEach((article) => {
+        expect(article).toEqual(
+          expect.objectContaining({
+            author: "butter_bridge",
+            title: expect.any(String),
+            article_id: expect.any(Number),
+            topic: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            article_img_url: expect.any(String),
+            comment_count: expect.any(Number),
+          })
+        );
+      });
+    })
+    ;
+  });
+
+  test('404: returns a message when user does not found', () => {
+    return request(app)
+    .get("/api/users/username1/articles")
+    .expect(404)
+    .then(({body : {msg}})=>{
+     expect(msg).toBe("Does Not Found") 
+    })
+  });
+
 });

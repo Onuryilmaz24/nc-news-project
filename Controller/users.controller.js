@@ -47,7 +47,6 @@ exports.addUsers = (req, res, next) => {
 
 exports.deleteUsers = (req, res, next) => {
   const { username } = req.params;
-  console.log(username)
 
   const promises = [deleteUserByUsername(username)];
 
@@ -59,6 +58,7 @@ exports.deleteUsers = (req, res, next) => {
     res.status(204).send({user})
   }).catch((err)=>{
     next(err)
-    console.log(err)
   })
 };
+
+
