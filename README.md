@@ -7,7 +7,8 @@ Hello, this is a the first app that I've made for backend applications for NC-NE
 ## Hosted Version
 
  -- https://nc-news-project-w66a.onrender.com/api
-
+ 
+  (note: spin-up period may take couple of minutes )
 ---
 
 ## Project Summary
