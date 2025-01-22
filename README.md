@@ -22,7 +22,7 @@ MVC Architecture: Developed using the Model-View-Controller (MVC) design pattern
 Test-Driven Development (TDD): The API is built with a focus on testing to ensure reliability and functionality.
 A live version of this API is hosted online. Follow the link below to explore detailed documentation, including the full list of available endpoints, example queries, and typical responses. Please allow a minute or two for the server to initialize on first access.
 
-Hosted version of the project: [Here](https://nc-news-project-w66a.onrender.com/api)
+Hosted version of the project: [Here](https://nc-news-project-backend.onrender.com)
 
 For Chrome users, recommend installing a JSON viewer extension to better format the API responses for easier readability.
 
